@@ -1,0 +1,86 @@
+@import "tailwindcss";
+
+@theme {
+  --color-primary-50: #faf7ff;
+  --color-primary-100: #f4edff;
+  --color-primary-200: #e9deff;
+  --color-primary-300: #d8c4ff;
+  --color-primary-400: #c19dff;
+  --color-primary-500: #a573ff;
+  --color-primary-600: #8b4cf7;
+  --color-primary-700: #7c39e3;
+  --color-primary-800: #6830bf;
+  --color-primary-900: #562b9c;
+
+  --color-secondary-50: #f0fdfd;
+  --color-secondary-100: #ccfbf8;
+  --color-secondary-200: #99f6f1;
+  --color-secondary-300: #5ee8df;
+  --color-secondary-400: #2bd0c5;
+  --color-secondary-500: #14b5aa;
+  --color-secondary-600: #0f918b;
+  --color-secondary-700: #13746f;
+  --color-secondary-800: #155e5a;
+  --color-secondary-900: #164e4b;
+
+  --color-accent-50: #fff7ed;
+  --color-accent-100: #ffedd5;
+  --color-accent-200: #fed7aa;
+  --color-accent-300: #fdba74;
+  --color-accent-400: #fb923c;
+  --color-accent-500: #f97316;
+  --color-accent-600: #ea580c;
+  --color-accent-700: #c2410c;
+  --color-accent-800: #9a3412;
+  --color-accent-900: #7c2d12;
+
+  --color-success-50: #f0fdf4;
+  --color-success-100: #dcfce7;
+  --color-success-200: #bbf7d0;
+  --color-success-300: #86efac;
+  --color-success-400: #4ade80;
+  --color-success-500: #22c55e;
+  --color-success-600: #16a34a;
+  --color-success-700: #15803d;
+  --color-success-800: #166534;
+  --color-success-900: #14532d;
+
+  --color-warning-50: #fffbeb;
+  --color-warning-100: #fef3c7;
+  --color-warning-200: #fde68a;
+  --color-warning-300: #fcd34d;
+  --color-warning-400: #fbbf24;
+  --color-warning-500: #f59e0b;
+  --color-warning-600: #d97706;
+  --color-warning-700: #b45309;
+  --color-warning-800: #92400e;
+  --color-warning-900: #78350f;
+
+  --color-destructive-50: #fef2f2;
+  --color-destructive-100: #fee2e2;
+  --color-destructive-200: #fecaca;
+  --color-destructive-300: #fca5a5;
+  --color-destructive-400: #f87171;
+  --color-destructive-500: #ef4444;
+  --color-destructive-600: #dc2626;
+  --color-destructive-700: #b91c1c;
+  --color-destructive-800: #991b1b;
+  --color-destructive-900: #7f1d1d;
+
+  --font-sans: Inter, system-ui, sans-serif;
+}
+
+@layer utilities {
+  .shadow-soft {
+    box-shadow: 0 2px 8px 0 rgb(0 0 0 / 0.05);
+  }
+  .shadow-soft-lg {
+    box-shadow: 0 4px 16px 0 rgb(0 0 0 / 0.08);
+  }
+  .shadow-soft-xl {
+    box-shadow: 0 8px 32px 0 rgb(0 0 0 / 0.12);
+  }
+  .font-display {
+    font-family: "Playfair Display", serif;
+  }
+}
