@@ -8,7 +8,7 @@ import {
   Cloud,
   CloudOff,
 } from "lucide-react";
-import { Memory } from "../types";
+import { Memory } from "@/types/types";
 import Card from "./ui/Card";
 import Tag from "./ui/Tag";
 import Button from "./ui/Button";

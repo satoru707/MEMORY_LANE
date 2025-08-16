@@ -9,7 +9,7 @@ import {
   TrendingUp,
   Shield,
 } from "lucide-react";
-import { cn } from "../_lib/utils";
+import { cn } from "@/lib/utils";
 import Button from "./ui/Button";
 
 interface SidebarProps {
@@ -45,7 +45,7 @@ const Sidebar: React.FC<SidebarProps> = ({
           isOpen ? "translate-x-0" : "-translate-x-full"
         )}
       >
-        <div className="flex flex-col h-full">
+        <div className="flex flex-col">
           {/* Navigation */}
           <nav className="flex-1 px-4 py-6 space-y-2">
             {navigation.map((item) => {

@@ -4,9 +4,10 @@
     "paths": {
       "@/*": ["./*"],
       "@/components/*": ["app/_components/*"],
-      "@/_components/*": ["app/_components/*"],
       "@/lib/*": ["app/_lib/*"],
-      "@/_lib/*": ["app/_lib/*"]
+      "@/types/*": ["app/_types/*"],
+      "@/data/*": ["app/_data/*"],
+      "@/pages/*": ["app/_pages/*"]
     },
     "target": "ES2017",
     "lib": ["dom", "dom.iterable", "esnext"],

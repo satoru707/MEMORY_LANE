@@ -68,12 +68,10 @@ const LandingPage: React.FC = () => {
               </h1>
             </div>
             <div className="flex items-center space-x-4">
-              <Link href={"/login"}>
-                {" "}
-                <Button variant="ghost">Sign In</Button> '
+              <Link href={"/auth/login"}>
+                <Button variant="ghost">Sign In</Button>
               </Link>
-              <Link href={"/register"}>
-                {" "}
+              <Link href={"/auth/register"}>
                 <Button>Get Started</Button>
               </Link>
             </div>
@@ -82,10 +80,17 @@ const LandingPage: React.FC = () => {
       </header>
 
       {/* Hero Section */}
-      <section className="py-20 lg:py-32">
+      <section className="relative py-20 lg:py-32 overflow-hidden">
+        {/* Decorative background */}
+        <div className="absolute -top-24 -left-24 h-80 w-80 rounded-full bg-primary-300/30 blur-3xl" />
+        <div className="absolute top-1/3 -right-24 h-80 w-80 rounded-full bg-secondary-300/30 blur-3xl" />
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="text-center space-y-8">
             <div className="space-y-4">
+              <div className="inline-flex items-center gap-2 rounded-full border border-neutral-200 bg-white/70 px-3 py-1 text-sm text-neutral-700 shadow-soft backdrop-blur">
+                <span className="h-2 w-2 rounded-full bg-primary-500" />
+                New • AI-powered memory keeping
+              </div>
               <h1 className="text-4xl sm:text-5xl lg:text-6xl font-display font-bold text-neutral-900 leading-tight">
                 Your Life's Story,
                 <br />
@@ -101,8 +106,11 @@ const LandingPage: React.FC = () => {
             </div>
 
             <div className="flex flex-col sm:flex-row gap-4 justify-center">
-              <Link href={"/register"}>
-                <Button size="lg" className="text-lg px-8 py-4">
+              <Link href={"/auth/register"}>
+                <Button
+                  size="lg"
+                  className="text-lg px-8 py-4 bg-gradient-to-r from-primary-600 to-secondary-600 hover:from-primary-700 hover:to-secondary-700"
+                >
                   Start Your Journey
                   <ArrowRight className="w-5 h-5 ml-2" />
                 </Button>
@@ -142,7 +150,12 @@ const LandingPage: React.FC = () => {
 
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
             {features.map((feature, index) => (
-              <Card key={index} className="text-center space-y-4" padding="lg">
+              <Card
+                key={index}
+                className="text-center space-y-4 transition-transform duration-200 hover:-translate-y-1"
+                padding="lg"
+                hover
+              >
                 <div className="w-12 h-12 bg-gradient-to-br from-primary-100 to-secondary-100 rounded-xl flex items-center justify-center mx-auto">
                   <feature.icon className="w-6 h-6 text-primary-600" />
                 </div>
@@ -190,7 +203,7 @@ const LandingPage: React.FC = () => {
           </div>
 
           <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
-            <Card className="text-center space-y-6" padding="lg">
+            <Card className="text-center space-y-6" padding="lg" hover>
               <div>
                 <h3 className="text-xl font-semibold text-neutral-900 mb-2">
                   Starter
@@ -211,8 +224,9 @@ const LandingPage: React.FC = () => {
             </Card>
 
             <Card
-              className="text-center space-y-6 border-primary-200 bg-primary-50"
+              className="text-center space-y-6 border-primary-200 bg-primary-50 ring-2 ring-primary-500"
               padding="lg"
+              hover
             >
               <div>
                 <h3 className="text-xl font-semibold text-neutral-900 mb-2">
@@ -234,7 +248,7 @@ const LandingPage: React.FC = () => {
               </Button>
             </Card>
 
-            <Card className="text-center space-y-6" padding="lg">
+            <Card className="text-center space-y-6" padding="lg" hover>
               <div>
                 <h3 className="text-xl font-semibold text-neutral-900 mb-2">
                   Family
@@ -259,17 +273,21 @@ const LandingPage: React.FC = () => {
       </section>
 
       {/* CTA Section */}
-      <section className="py-20">
+      <section className="relative py-20 bg-gradient-to-r from-primary-600 to-secondary-600 text-white overflow-hidden">
+        <div className="absolute -bottom-24 -left-24 h-80 w-80 rounded-full bg-white/10 blur-3xl" />
         <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
           <div className="space-y-6">
-            <h2 className="text-3xl sm:text-4xl font-display font-bold text-neutral-900">
+            <h2 className="text-3xl sm:text-4xl font-display font-bold">
               Ready to preserve your story?
             </h2>
-            <p className="text-xl text-neutral-600">
+            <p className="text-xl text-white/80">
               Join thousands who are already capturing their most precious
               moments with Memory Lane.
             </p>
-            <Button size="lg" className="text-lg px-8 py-4">
+            <Button
+              size="lg"
+              className="text-lg px-8 py-4 bg-white text-neutral-900 hover:bg-neutral-100"
+            >
               Start Your Free Account
               <ArrowRight className="w-5 h-5 ml-2" />
             </Button>

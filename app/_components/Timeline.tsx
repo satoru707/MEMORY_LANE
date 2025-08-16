@@ -1,11 +1,11 @@
 "use client";
 import React, { useState } from "react";
 import { ChevronDown, ChevronRight, Filter, Search } from "lucide-react";
-import { Memory } from "../types";
+import { Memory } from "@/types/types";
 import MemoryCard from "./MemoryCard";
 import Button from "./ui/Button";
 import Input from "./ui/Input";
-import { cn } from "../_lib/utils";
+import { cn } from "@/lib/utils";
 
 interface TimelineProps {
   memories: Memory[];

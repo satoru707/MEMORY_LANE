@@ -3,19 +3,23 @@ import React, { useState } from "react";
 import { Search, Plus, Cloud, CloudOff, Menu, Bell, User } from "lucide-react";
 import Button from "./ui/Button";
 import Input from "./ui/Input";
-import { cn } from "../_lib/utils";
+import { cn } from "@/lib/utils";
 
 interface HeaderProps {
   onCreateMemory: () => void;
   onToggleSidebar: () => void;
+  onShowNotifications?: () => void;
   syncStatus: "online" | "offline" | "syncing";
+  notificationCount?: number;
   className?: string;
 }
 
 const Header: React.FC<HeaderProps> = ({
   onCreateMemory,
   onToggleSidebar,
+  onShowNotifications,
   syncStatus,
+  notificationCount = 0,
   className,
 }) => {
   const [showSearch, setShowSearch] = useState(false);
@@ -57,17 +61,6 @@ const Header: React.FC<HeaderProps> = ({
               <h1 className="text-xl font-display font-bold text-neutral-900 hidden sm:block">
                 Memory Lane
               </h1>
-            </div>
-          </div>
-
-          {/* Center Section - Search */}
-          <div className="flex-1 max-w-md mx-4 hidden md:block">
-            <div className="relative">
-              <Input
-                placeholder="Search memories, tags, dates..."
-                className="pl-10 bg-neutral-50 border-neutral-200"
-              />
-              <Search className="w-4 h-4 absolute left-3 top-1/2 transform -translate-y-1/2 text-neutral-400" />
             </div>
           </div>
 
@@ -118,13 +111,26 @@ const Header: React.FC<HeaderProps> = ({
             </Button>
 
             {/* Notifications */}
-            <Button variant="ghost" size="icon" className="relative">
+            <Button
+              variant="ghost"
+              size="icon"
+              className="relative"
+              onClick={onShowNotifications}
+            >
               <Bell className="w-5 h-5" />
-              <span className="absolute top-1 right-1 w-2 h-2 bg-destructive-500 rounded-full"></span>
+              {notificationCount > 0 && (
+                <span className="absolute -top-1 -right-1 w-5 h-5 bg-destructive-500 text-white text-xs rounded-full flex items-center justify-center">
+                  {notificationCount > 9 ? "9+" : notificationCount}
+                </span>
+              )}
             </Button>
 
             {/* Profile */}
-            <Button variant="ghost" size="icon">
+            <Button
+              onClick={() => localStorage.setItem("route", "settings")}
+              variant="ghost"
+              size="icon"
+            >
               <User className="w-5 h-5" />
             </Button>
           </div>
