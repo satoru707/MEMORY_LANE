@@ -8,6 +8,8 @@ import {
   Settings,
   TrendingUp,
   Shield,
+  User,
+  Users,
 } from "lucide-react";
 import { cn } from "@/lib/utils";
 import Button from "./ui/Button";
@@ -16,27 +18,31 @@ interface SidebarProps {
   isOpen: boolean;
   currentPage: string;
   onNavigate: (page: string) => void;
+  onClick: () => void;
 }
 
 const Sidebar: React.FC<SidebarProps> = ({
   isOpen,
   currentPage,
   onNavigate,
+  onClick,
 }) => {
   const navigation = [
     { name: "Timeline", icon: Home, id: "timeline" },
+    { name: "Family", icon: Users, id: "family" },
     { name: "Search", icon: Search, id: "search" },
     { name: "Tags", icon: Tag, id: "tags" },
     { name: "Stories", icon: BookOpen, id: "stories" },
     { name: "Analytics", icon: TrendingUp, id: "analytics" },
     { name: "Settings", icon: Settings, id: "settings" },
+    // { name: "Profile", icon: User, id: "profile" },
     { name: "Admin", icon: Shield, id: "admin" },
   ];
 
   return (
     <>
       {/* Mobile Overlay */}
-      {isOpen && <div className="lg:hidden fixed inset-0 z-30 bg-black/50" />}
+      {isOpen && <div className="lg:hidden fixed inset-0 bg-black/50" />}
 
       {/* Sidebar */}
       <aside
@@ -55,7 +61,9 @@ const Sidebar: React.FC<SidebarProps> = ({
               return (
                 <button
                   key={item.id}
-                  onClick={() => onNavigate(item.id)}
+                  onClick={() => {
+                    onNavigate(item.id), onClick();
+                  }}
                   className={cn(
                     "w-full flex items-center space-x-3 px-3 py-2 rounded-lg text-sm font-medium transition-colors",
                     isActive

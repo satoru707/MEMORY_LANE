@@ -6,6 +6,7 @@ interface InputProps extends React.InputHTMLAttributes<HTMLInputElement> {
   label?: string;
   error?: string;
   helper?: string;
+  require?: boolean;
 }
 
 const Input: React.FC<InputProps> = ({
@@ -14,6 +15,7 @@ const Input: React.FC<InputProps> = ({
   helper,
   className,
   id,
+  require,
   ...props
 }) => {
   const inputId = id;
@@ -38,6 +40,7 @@ const Input: React.FC<InputProps> = ({
           className
         )}
         {...props}
+        {...(require ? { required: true } : {})}
       />
       {error && <p className="text-sm text-destructive-600">{error}</p>}
       {helper && !error && <p className="text-sm text-neutral-500">{helper}</p>}

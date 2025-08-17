@@ -35,7 +35,7 @@ const Header: React.FC<HeaderProps> = ({
   return (
     <header
       className={cn(
-        "bg-white border-b border-neutral-200 sticky top-0 z-40",
+        "bg-white border-b border-neutral-200 sticky top-2 z-40",
         className
       )}
     >
@@ -66,16 +66,6 @@ const Header: React.FC<HeaderProps> = ({
 
           {/* Right Section */}
           <div className="flex items-center space-x-2">
-            {/* Mobile Search Toggle */}
-            <Button
-              variant="ghost"
-              size="icon"
-              onClick={() => setShowSearch(!showSearch)}
-              className="md:hidden"
-            >
-              <Search className="w-5 h-5" />
-            </Button>
-
             {/* Sync Status */}
             <div
               className={cn(
@@ -120,7 +110,7 @@ const Header: React.FC<HeaderProps> = ({
               <Bell className="w-5 h-5" />
               {notificationCount > 0 && (
                 <span className="absolute -top-1 -right-1 w-5 h-5 bg-destructive-500 text-white text-xs rounded-full flex items-center justify-center">
-                  {notificationCount > 9 ? "9+" : notificationCount}
+                  {notificationCount > 99 ? "99+" : notificationCount}
                 </span>
               )}
             </Button>
@@ -135,16 +125,6 @@ const Header: React.FC<HeaderProps> = ({
             </Button>
           </div>
         </div>
-
-        {/* Mobile Search */}
-        {showSearch && (
-          <div className="pb-4 md:hidden">
-            <Input
-              placeholder="Search memories, tags, dates..."
-              className="bg-neutral-50 border-neutral-200"
-            />
-          </div>
-        )}
       </div>
     </header>
   );

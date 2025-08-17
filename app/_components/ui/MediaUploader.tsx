@@ -74,6 +74,8 @@ const MediaUploader: React.FC<MediaUploaderProps> = ({
       return true;
     });
 
+    console.log("validFiles", validFiles);
+
     if (files.length + validFiles.length > maxFiles) {
       console.error(`Cannot upload more than ${maxFiles} files`);
       return;

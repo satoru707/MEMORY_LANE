@@ -12,6 +12,7 @@ import SettingsPage from "@/pages/SettingsPage";
 import AdminPage from "@/pages/AdminPage";
 import AnalyticsPage from "@/pages/AnalyticsPage";
 import FamilyTimelinePage from "@/pages/FamilyTimelinePage";
+import ProfilePage from "@/pages/ProfilePage";
 import PrivacySettingsPage from "@/pages/PrivacySettingPage";
 import OfflineBanner from "@/components/ui/OfflineBanner";
 import NotificationToast from "@/components/ui/NotificationToast";
@@ -24,6 +25,7 @@ function App() {
   const [currentPage, setCurrentPage] = useState("timeline");
   const [sidebarOpen, setSidebarOpen] = useState(false);
   const [createModalOpen, setCreateModalOpen] = useState(false);
+  // if online or offline
   const isOnline = useNetworkStatus();
   const [selectedMemory, setSelectedMemory] = useState<Memory | null>(null);
   const [viewingMemoryDetail, setViewingMemoryDetail] = useState<string | null>(
@@ -80,6 +82,18 @@ function App() {
     }
   }, [isOnline]);
 
+  useEffect(() => {
+    setInterval(() => {
+      if (
+        localStorage.getItem("route") &&
+        localStorage.getItem("route") == "settings"
+      ) {
+        setCurrentPage("settings");
+        localStorage.removeItem("route");
+      }
+    }, 1000); // Show notifications every 5 seconds
+  });
+
   const syncOfflineChanges = async () => {
     console.log("Attempting to sync offline changes...");
     const changes = await db.offline_changes.toArray();
@@ -123,10 +137,60 @@ function App() {
     setViewingMemoryDetail(null);
   };
 
+  // Pass memory to CreateMemoryModal for editing
   const handleEditMemory = (memory: Memory) => {
     setSelectedMemory(memory);
     setCreateModalOpen(true);
     setViewingMemoryDetail(null);
+  };
+
+  const handleDeleteMemory = async (memoryId: string) => {
+    console.log("Attempting to delete memory:", memoryId);
+    // Assume successful delete from backend for now
+    // In a real app, you'd make an API call here, e.g., await deleteMemoryFromBackend(memoryId);
+
+    if (isOnline) {
+      console.log("Simulating backend delete for memory:", memoryId);
+      // Actual backend delete API call here
+    } else {
+      console.log("Queueing offline delete for memory:", memoryId);
+      await db.offline_changes.add({
+        type: "delete",
+        collection: "memories",
+        data: { id: memoryId } as Memory, // Only need ID for delete
+        timestamp: Date.now(),
+      });
+    }
+    await db.memories.delete(memoryId); // Delete from local Dexie store
+  };
+
+  const handleShareMemory = async (memory: Memory) => {
+    console.log("Attempting to toggle share status for memory:", memory.id);
+    const updatedMemory = {
+      ...memory,
+      isPublic: !memory.isPublic,
+      updatedAt: new Date().toISOString(),
+    }; // Toggle isPublic
+
+    if (isOnline) {
+      console.log(
+        "Simulating backend update for memory share status:",
+        updatedMemory.id
+      );
+      // Actual backend update API call here to toggle isPublic
+    } else {
+      console.log(
+        "Queueing offline update for memory share status:",
+        updatedMemory.id
+      );
+      await db.offline_changes.add({
+        type: "update",
+        collection: "memories",
+        data: updatedMemory,
+        timestamp: Date.now(),
+      });
+    }
+    await db.memories.put(updatedMemory); // Update in local Dexie store
   };
 
   const handleMarkNotificationAsRead = (id: string) => {
@@ -161,7 +225,7 @@ function App() {
         onToggleSidebar={() => setSidebarOpen(!sidebarOpen)}
         onShowNotifications={() => setShowNotifications(!showNotifications)}
         //set sync status
-        syncStatus="online"
+        syncStatus={isOnline ? "online" : "offline"}
         notificationCount={notifications.filter((n) => !n.read).length}
       />
 
@@ -171,6 +235,7 @@ function App() {
           isOpen={sidebarOpen}
           currentPage={currentPage}
           onNavigate={setCurrentPage}
+          onClick={() => setSidebarOpen(false)}
         />
 
         {/* Main Content */}
@@ -193,6 +258,9 @@ function App() {
                   <Timeline
                     memories={memories}
                     onMemoryClick={handleMemoryClick}
+                    onEditMemory={handleEditMemory} // Pass handleEditMemory
+                    onDeleteMemory={handleDeleteMemory} // Pass handleDeleteMemory
+                    onShareMemory={handleShareMemory} // Pass handleShareMemory
                   />
                 </div>
               </div>
@@ -207,13 +275,17 @@ function App() {
           {currentPage === "privacy" && <PrivacySettingsPage />}
           {currentPage === "analytics" && <AnalyticsPage />}
           {currentPage === "admin" && <AdminPage />}
+          {currentPage === "profile" && <ProfilePage />}
         </main>
       </div>
 
       {/* Create Memory Modal */}
       <CreateMemoryModal
         isOpen={createModalOpen}
-        onClose={() => setCreateModalOpen(false)}
+        onClose={() => {
+          setCreateModalOpen(false);
+          setSelectedMemory(null); // Reset selectedMemory when modal closes
+        }}
         onSave={handleCreateMemory}
         editingMemory={selectedMemory || undefined}
       />
@@ -225,6 +297,13 @@ function App() {
         onClose={() => setShowNotifications(false)}
         isOpen={showNotifications}
       />
+      {/* close sidebar if outside is clicked */}
+      {sidebarOpen && (
+        <div
+          className="fixed inset-0 z-30 bg-black opacity-50 lg:hidden"
+          onClick={() => setSidebarOpen(false)}
+        />
+      )}
     </div>
   );
 }

@@ -16,7 +16,9 @@ import Card from "@/components/ui/Card";
 import Tag from "@/components/ui/Tag";
 import Modal from "@/components/ui/Modal";
 import { Memory } from "@/types/types";
-import { sampleMemories } from "@/data/sampleData";
+import { db } from "@/lib/utils"; // Import db
+import { useLiveQuery } from "dexie-react-hooks"; // Import useLiveQuery
+// import { sampleMemories } from "@/data/sampleData"; // Remove this line
 
 interface MemoryDetailPageProps {
   memoryId: string;
@@ -32,9 +34,19 @@ const MemoryDetailPage: React.FC<MemoryDetailPageProps> = ({
   const [lightboxOpen, setLightboxOpen] = useState(false);
   const [currentImageIndex, setCurrentImageIndex] = useState(0);
 
-  // Find the memory (in real app, this would come from props or API)
-  const memory =
-    sampleMemories.find((m) => m.id === memoryId) || sampleMemories[0];
+  // Fetch the memory reactively from Dexie
+  const memory = useLiveQuery(() => db.memories.get(memoryId), [memoryId]);
+
+  // Handle case where memory is not found or still loading
+  if (!memory) {
+    return (
+      <div className="min-h-screen bg-neutral-50 flex items-center justify-center">
+        <p className="text-neutral-500">
+          Loading memory or memory not found...
+        </p>
+      </div>
+    );
+  }
 
   const moodColors = {
     joyful: "bg-yellow-100 text-yellow-800 border-yellow-200",
@@ -170,21 +182,22 @@ const MemoryDetailPage: React.FC<MemoryDetailPageProps> = ({
             </div>
 
             {/* Tags */}
-            {memory.tags.length > 0 && (
-              <div className="space-y-2">
-                <div className="flex items-center space-x-2">
-                  <TagIcon className="w-4 h-4 text-neutral-500" />
-                  <span className="text-sm font-medium text-neutral-700">
-                    Tags
-                  </span>
+            {memory.tags &&
+              memory.tags.length > 0 && ( // Add null check for tags
+                <div className="space-y-2">
+                  <div className="flex items-center space-x-2">
+                    <TagIcon className="w-4 h-4 text-neutral-500" />
+                    <span className="text-sm font-medium text-neutral-700">
+                      Tags
+                    </span>
+                  </div>
+                  <div className="flex flex-wrap gap-2">
+                    {memory.tags.map((tag) => (
+                      <Tag key={tag}>{tag}</Tag>
+                    ))}
+                  </div>
                 </div>
-                <div className="flex flex-wrap gap-2">
-                  {memory.tags.map((tag) => (
-                    <Tag key={tag}>{tag}</Tag>
-                  ))}
-                </div>
-              </div>
-            )}
+              )}
           </Card>
 
           {/* AI Summary */}

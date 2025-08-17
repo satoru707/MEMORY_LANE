@@ -27,6 +27,7 @@ export interface Memory {
   syncStatus?: "synced" | "pending" | "offline";
   createdAt: string;
   updatedAt?: string;
+  isPublic?: boolean;
 }
 
 export interface User {
