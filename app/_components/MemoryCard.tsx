@@ -12,7 +12,7 @@ import { Memory } from "@/types/types";
 import Card from "./ui/Card";
 import Tag from "./ui/Tag";
 import Button from "./ui/Button";
-import { cn } from "../_lib/utils";
+import { cn } from "@/lib/utils";
 
 interface MemoryCardProps {
   memory: Memory;

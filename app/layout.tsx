@@ -15,9 +15,10 @@ export default function RootLayout({
 }: Readonly<{ children: React.ReactNode }>) {
   return (
     <html lang="en">
-      <body className={inter.className}>{children}</body>
-      <script>
-        {/* if ('serviceWorker' in navigator) {
+      <head>
+        <script>
+          {`
+          if ('serviceWorker' in navigator) {
             window.addEventListener('load', function() {
               navigator.serviceWorker.register('/service-worker.js').then(function(registration) {
                 console.log('ServiceWorker registration successful with scope: ', registration.scope);
@@ -25,8 +26,11 @@ export default function RootLayout({
                 console.log('ServiceWorker registration failed: ', err);
               });
             });
-          } */}
-      </script>
+          }
+        `}
+        </script>
+      </head>
+      <body className={inter.className}>{children}</body>
     </html>
   );
 }
