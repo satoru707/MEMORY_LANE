@@ -1,7 +1,3 @@
 {
-  "/mainpage/page": "app/mainpage/page.js",
-  "/auth/register/page": "app/auth/register/page.js",
-  "/auth/login/page": "app/auth/login/page.js",
-  "/auth/password/page": "app/auth/password/page.js",
-  "/onboarding/page": "app/onboarding/page.js"
+  "/mainpage/page": "app/mainpage/page.js"
 }

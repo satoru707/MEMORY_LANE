@@ -241,7 +241,14 @@ const MemoryCard: React.FC<MemoryCardProps> = ({
   };
 
   return (
-    <Card hover className="cursor-pointer" onClick={onClick}>
+    <Card
+      hover
+      className="cursor-pointer"
+      onClick={() => {
+        console.log("fin");
+        onClick();
+      }}
+    >
       <div className="space-y-4">
         {/* Header */}
         <div className="flex items-start justify-between">

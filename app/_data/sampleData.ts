@@ -1,7 +1,8 @@
-import { Memory, User, Tag } from "@/types/types";
+import { Memory, User, Tag, FamilyMemories } from "@/types/types";
 
+// user data
 export const sampleUser: User = {
-  id: "user-1",
+  id: "user-sarah",
   name: "Sarah Johnson",
   email: "sarah@example.com",
   avatar:
@@ -13,6 +14,95 @@ export const sampleUser: User = {
   },
 };
 
+// fetch comments and reactions with id
+export const familyMemories: FamilyMemories[] = [
+  {
+    id: "family-memory-1",
+    memoryId: "family-memory-1",
+    userId: "user-sarah",
+    sharedBy: "user-john",
+    memory: {
+      id: "family-memory-1",
+      content: "A truly special day celebrating Grandma's 90th!",
+      title: "Grandma's 90th birthday",
+      date: "2024-06-01",
+      mood: "joyful",
+      tags: ["family", "birthday", "celebration", "grandma"],
+      images: [
+        "https://images.pexels.com/photos/1721941/pexels-photo-1721941.jpeg?auto=compress&cs=tinysrgb&w=800",
+      ],
+      location: "Family Home, San Diego",
+      syncStatus: "synced",
+      createdAt: "2024-06-01T15:00:00Z",
+      updatedAt: "2024-06-01T15:00:00Z",
+    },
+    user: {
+      id: "user-john",
+      name: "John Doe",
+      email: "john@example.com",
+      avatar:
+        "https://images.pexels.com/photos/220453/pexels-photo-220453.jpeg?auto=compress&cs=tinysrgb&w=150",
+    },
+  },
+  {
+    id: "family-memory-2",
+    memoryId: "family-memory-2",
+    userId: "user-sarah",
+    sharedBy: "user-emma",
+    memory: {
+      id: "family-memory-2",
+      content: "A day filled with laughter and fun at the beach with family.",
+      title: "Fun family beach day ",
+      date: "2023-08-15",
+      mood: "joyful",
+      tags: ["family", "beach", "fun", "summer"],
+      images: [
+        "https://images.pexels.com/photos/164077/pexels-photo-164077.jpeg?auto=compress&cs=tinysrgb&w=800",
+      ],
+      location: "Beachside, California",
+      syncStatus: "synced",
+      createdAt: "2023-08-15T10:00:00Z",
+      updatedAt: "2023-08-15T10:00:00Z",
+    },
+    user: {
+      id: "user-emma",
+      name: "Emma Smith",
+      email: "emma@example.com",
+      avatar:
+        "https://images.pexels.com/photos/1183266/pexels-photo-1183266.jpeg?auto=compress&cs=tinysrgb&w=150",
+    },
+  },
+  {
+    id: "family-memory-3",
+    memoryId: "family-memory-3",
+    userId: "user-sarah",
+    sharedBy: "user-john",
+    memory: {
+      id: "family-memory-3",
+      content: "Another fantastic summer BBQ at the lake house.",
+      title: "Annual family BBQ ",
+      date: "2023-07-20",
+      mood: "peaceful",
+      tags: ["family", "summer", "bbq", "lake"],
+      images: [
+        "https://images.pexels.com/photos/1482803/pexels-photo-1482803.jpeg?auto=compress&cs=tinysrgb&w=800",
+      ],
+      location: "Lake Tahoe",
+      syncStatus: "synced",
+      createdAt: "2023-07-20T17:00:00Z",
+      updatedAt: "2023-07-20T17:00:00Z",
+    },
+    user: {
+      id: "user-john",
+      name: "John Doe",
+      email: "john@example.com",
+      avatar:
+        "https://images.pexels.com/photos/220453/pexels-photo-220453.jpeg?auto=compress&cs=tinysrgb&w=150",
+    },
+  },
+];
+
+// family member data
 export const timeRangeOptions = [
   { value: "week", label: "Last 7 days" },
   { value: "month", label: "Last 30 days" },
@@ -88,7 +178,7 @@ export const sampleMemories: Memory[] = [
     id: "memory-1",
     title: "Family Thanksgiving Dinner",
     content: `What an amazing Thanksgiving we had this year! The whole family gathered at Mom and Dad's house - all 15 of us squeezed around the extended dining room table. 
-
+    
 Uncle Mike told his famous stories again, and somehow they get funnier every year. Little Emma, now 6, insisted on saying grace and thanked God for "turkey, pie, and video games" which had everyone laughing.
 
 Mom outdid herself with the cooking. The turkey was perfectly golden, and her stuffing recipe (still secret after all these years) was incredible as always. Dad carved the turkey with his usual ceremony, telling us about the "proper technique" he learned from his father.
@@ -107,6 +197,8 @@ After dinner, we played charades in the living room. Cousin Jake's impression of
     syncStatus: "synced",
     createdAt: "2024-11-28T20:30:00Z",
     updatedAt: "2024-11-28T20:30:00Z",
+    userId: "user-sarah", // Assign to current user
+    isPublic: true, // Example of a public memory
   },
   {
     id: "memory-2",
@@ -131,6 +223,8 @@ I took so many photos, but none of them captured the feeling of that moment - th
     syncStatus: "synced",
     createdAt: "2024-11-15T18:45:00Z",
     updatedAt: "2024-11-15T18:45:00Z",
+    userId: "user-sarah", // Assign to current user
+    isPublic: false, // Example of a private memory
   },
   {
     id: "memory-3",
@@ -156,6 +250,8 @@ Best friend mission: accomplished!`,
     syncStatus: "synced",
     createdAt: "2024-10-22T22:15:00Z",
     updatedAt: "2024-10-22T22:15:00Z",
+    userId: "user-sarah", // Assign to current user
+    isPublic: true, // Example of a public memory
   },
   {
     id: "memory-4",
@@ -178,6 +274,8 @@ Here\'s to new beginnings!`,
     syncStatus: "synced",
     createdAt: "2024-09-03T19:00:00Z",
     updatedAt: "2024-09-03T19:00:00Z",
+    userId: "user-sarah", // Assign to current user
+    isPublic: false, // Example of a private memory
   },
   {
     id: "memory-5",
@@ -203,6 +301,8 @@ Note to self: buy more flour.`,
     syncStatus: "pending",
     createdAt: "2024-08-17T21:30:00Z",
     updatedAt: "2024-08-17T21:30:00Z",
+    userId: "user-sarah", // Assign to current user
+    isPublic: true, // Example of a public memory
   },
   {
     id: "memory-6",
@@ -225,6 +325,92 @@ I slept really well after that call.`,
     syncStatus: "synced",
     createdAt: "2024-07-12T09:15:00Z",
     updatedAt: "2024-07-12T09:15:00Z",
+    userId: "user-sarah", // Assign to current user
+    isPublic: false, // Example of a private memory
+  },
+];
+
+export const sampleFamilyMembers: User[] = [
+  {
+    id: "user-john",
+    name: "John Doe",
+    email: "john@example.com",
+    avatar:
+      "https://images.pexels.com/photos/220453/pexels-photo-220453.jpeg?auto=compress&cs=tinysrgb&w=150",
+    preferences: {
+      aiEnabled: false,
+      autoBackup: false,
+      theme: "system",
+    },
+  },
+  {
+    id: "user-emma",
+    name: "Emma Smith",
+    email: "emma@example.com",
+    avatar:
+      "https://images.pexels.com/photos/1183266/pexels-photo-1183266.jpeg?auto=compress&cs=tinysrgb&w=150",
+    preferences: {
+      aiEnabled: true,
+      autoBackup: true,
+      theme: "dark",
+    },
+  },
+];
+export const sampleFamilyMemories: Memory[] = [
+  {
+    id: "family-memory-1",
+    title: "Grandma's 90th Birthday",
+    content: `A truly special day celebrating Grandma's 90th! The entire family flew in from all over the world. It was a huge gathering, filled with laughter, old stories, and a few happy tears. She looked so radiant, blowing out all those candles on her cake.`,
+    summary:
+      "Grandma's 90th birthday celebration with family from around the world.",
+    date: "2024-06-01",
+    mood: "joyful",
+    tags: ["family", "birthday", "celebration", "grandma"],
+    images: [
+      "https://images.pexels.com/photos/1721941/pexels-photo-1721941.jpeg?auto=compress&cs=tinysrgb&w=800",
+    ],
+    location: "Family Home, San Diego",
+    syncStatus: "synced",
+    createdAt: "2024-06-01T15:00:00Z",
+    updatedAt: "2024-06-01T15:00:00Z",
+    userId: "user-john", // John Doe's memory
+    isPublic: true,
+  },
+  {
+    id: "family-memory-2",
+    title: "Ski Trip to Aspen",
+    content: `Amazing week on the slopes in Aspen with the family! The snow was perfect, and the views were incredible. Even little Leo managed to get down the bunny slope without too many tumbles.`,
+    summary: "Fun family ski trip in Aspen with perfect snow and great views.",
+    date: "2024-02-15",
+    mood: "excited",
+    tags: ["family", "travel", "skiing", "winter"],
+    images: [
+      "https://images.pexels.com/photos/33045/pexels-photo.jpg?auto=compress&cs=tinysrgb&w=800",
+    ],
+    location: "Aspen, Colorado",
+    syncStatus: "synced",
+    createdAt: "2024-02-15T10:00:00Z",
+    updatedAt: "2024-02-15T10:00:00Z",
+    userId: "user-emma", // Emma Smith's memory
+    isPublic: true,
+  },
+  {
+    id: "family-memory-3",
+    title: "Summer BBQ at the Lake House",
+    content: `Another fantastic summer BBQ at the lake house. The weather was perfect, the food was delicious, and it was great to see everyone relaxing by the water. Dad's burgers were, as always, legendary.`,
+    summary: "Annual family BBQ at the lake house with great food and weather.",
+    date: "2023-07-20",
+    mood: "peaceful",
+    tags: ["family", "summer", "bbq", "lake"],
+    images: [
+      "https://images.pexels.com/photos/1482803/pexels-photo-1482803.jpeg?auto=compress&cs=tinysrgb&w=800",
+    ],
+    location: "Lake Tahoe",
+    syncStatus: "synced",
+    createdAt: "2023-07-20T17:00:00Z",
+    updatedAt: "2023-07-20T17:00:00Z",
+    userId: "user-john", // John Doe's memory
+    isPublic: true, // Example of a private family memory
   },
 ];
 

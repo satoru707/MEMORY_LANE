@@ -9,6 +9,7 @@ interface TagProps {
   removable?: boolean;
   onRemove?: () => void;
   className?: string;
+  onClick?: () => void;
 }
 
 const Tag: React.FC<TagProps> = ({
@@ -18,6 +19,7 @@ const Tag: React.FC<TagProps> = ({
   removable = false,
   onRemove,
   className,
+  onClick,
 }) => {
   const baseStyles = "inline-flex items-center rounded-full font-medium";
 
@@ -33,11 +35,18 @@ const Tag: React.FC<TagProps> = ({
   };
 
   return (
-    <span className={cn(baseStyles, variants[variant], sizes[size], className)}>
+    <span
+      className={cn(baseStyles, variants[variant], sizes[size], className)}
+      onClick={onClick} // Add this to make the entire tag clickable
+    >
       {children}
       {removable && (
         <button
-          onClick={onRemove}
+          onClick={(e) => {
+            e.stopPropagation(); // Prevent triggering the parent's onClick
+            onRemove?.();
+            console.log("finn");
+          }}
           className="ml-1 hover:bg-black/10 rounded-full p-0.5"
         >
           <X className="w-3 h-3" />

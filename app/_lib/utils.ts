@@ -1,5 +1,6 @@
 import { type ClassValue, clsx } from "clsx";
 import { twMerge } from "tailwind-merge";
+import { Memory } from "@/types/types";
 import { useState, useEffect } from "react";
 import Dexie, { Table } from "dexie";
 
@@ -31,45 +32,23 @@ export function useNetworkStatus() {
   return isOnline;
 }
 
-export interface MemoryData {
-  id: string;
-  title: string;
-  content?: string;
-  summary?: string;
-  date: string;
-  mood?:
-    | "joyful"
-    | "peaceful"
-    | "excited"
-    | "nostalgic"
-    | "grateful"
-    | "reflective";
-  tags: string[];
-  images?: string[];
-  location: string;
-  isAiGenerated?: boolean;
-  syncStatus?: "synced" | "pending" | "offline";
-  createdAt: string;
-  updatedAt?: string;
-}
-
 export interface OfflineChange {
   id?: number;
   type: "add" | "update" | "delete";
   collection: string;
-  data: MemoryData; // Or a more generic type if you handle other data types
+  data: Memory; // Or a more generic type if you handle other data types
   timestamp: number;
 }
 
 export class MemoryLaneDexie extends Dexie {
-  memories!: Table<MemoryData, string>;
+  memories!: Table<Memory, string>;
   offline_changes!: Table<OfflineChange, number>;
 
   constructor() {
     super("MemoryLaneDatabase");
     this.version(1).stores({
       memories:
-        "id, title, content, summary, date, mood, tags, images, location, isAiGenerated, syncStatus, createdAt, updatedAt",
+        "id, title, content, summary, date, mood, tags, images, location, isAiGenerated, syncStatus, createdAt, updatedAt, isPublic, userId",
       offline_changes: "++id, type, collection, timestamp",
     });
   }

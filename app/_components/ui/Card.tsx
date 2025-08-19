@@ -32,6 +32,7 @@ const Card: React.FC<CardProps> = ({
         paddingStyles[padding],
         className
       )}
+      onClick={onClick}
     >
       {children}
     </div>

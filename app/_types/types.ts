@@ -7,9 +7,18 @@ export interface OnboardingFlowProps {
   onComplete: () => void;
 }
 
+export interface FamilyMemories {
+  id: string;
+  memoryId: string;
+  userId: string;
+  sharedBy: string;
+  memory: Memory;
+  user: User;
+}
+
 export interface Memory {
   id: string;
-  title: string;
+  title?: string;
   content?: string;
   summary?: string;
   date: string;
@@ -28,6 +37,7 @@ export interface Memory {
   createdAt: string;
   updatedAt?: string;
   isPublic?: boolean;
+  userId?: string;
 }
 
 export interface User {
@@ -35,7 +45,7 @@ export interface User {
   name: string;
   email: string;
   avatar?: string;
-  preferences: {
+  preferences?: {
     aiEnabled: boolean;
     autoBackup: boolean;
     theme: "light" | "dark" | "system";

@@ -2,17 +2,25 @@ import React, { useState, useEffect } from "react";
 import { Search, Filter, Calendar, Tag as TagIcon, Clock } from "lucide-react";
 import MemoryCard from "@/components/MemoryCard";
 import EmptyState from "@/components/ui/EmptyState";
+import Modal from "@/components/ui/Modal";
 import Input from "@/components/ui/Input";
 import Button from "@/components/ui/Button";
 import Tag from "@/components/ui/Tag";
 import { Memory } from "@/types/types";
 import { sampleMemories } from "@/data/sampleData";
+import DatePicker from "@/components/ui/DatePicker";
+import MultiSelect from "@/components/ui/MultiSelect";
 
 const SearchPage: React.FC = () => {
-  const [sidebarOpen, setSidebarOpen] = useState(false);
   const [searchQuery, setSearchQuery] = useState("");
   const [searchResults, setSearchResults] = useState<Memory[]>([]);
   const [isSearching, setIsSearching] = useState(false);
+  const [filterModalOpen, setFilterModalOpen] = useState(false);
+  const [selectedTags, setSelectedTags] = useState<string[]>([]);
+  const [selectedMoods, setSelectedMoods] = useState<string[]>([]);
+  const [startDate, setStartDate] = useState<Date | null>(null);
+  const [endDate, setEndDate] = useState<Date | null>(null);
+
   const [recentSearches] = useState([
     "family vacation",
     "birthday party",
@@ -37,7 +45,9 @@ const SearchPage: React.FC = () => {
             memory.content.toLowerCase().includes(searchQuery.toLowerCase()) ||
             memory.tags.some((tag) =>
               tag.toLowerCase().includes(searchQuery.toLowerCase())
-            )
+            ) ||
+            memory.location.toLowerCase().includes(searchQuery.toLowerCase()) ||
+            memory.mood.toLowerCase().includes(searchQuery.toLowerCase())
         );
         setSearchResults(filtered);
         setIsSearching(false);
@@ -50,8 +60,42 @@ const SearchPage: React.FC = () => {
     }
   }, [searchQuery]);
 
+  const filteredMemories = React.useMemo(() => {
+    const dataToFilter = searchQuery.trim() ? searchResults : sampleMemories;
+    return dataToFilter.filter((memory) => {
+      const memoryDate = new Date(memory.date);
+      const matchesDateRange =
+        (!startDate || memoryDate >= startDate) &&
+        (!endDate || memoryDate <= endDate);
+      const matchesTags =
+        selectedTags.length === 0 ||
+        selectedTags.every((tag) => memory.tags.includes(tag));
+      const matchesMoods =
+        selectedMoods.length === 0 ||
+        (memory.mood && selectedMoods.includes(memory.mood));
+
+      return matchesDateRange && matchesTags && matchesMoods;
+    });
+  }, [
+    searchQuery,
+    searchResults,
+    selectedTags,
+    selectedMoods,
+    startDate,
+    endDate,
+  ]);
+
+  console.log("FIltered", filteredMemories);
+
+  const availableTags = Array.from(
+    new Set(sampleMemories.flatMap((mem) => mem.tags))
+  );
+  const availableMoods = Array.from(
+    new Set(sampleMemories.map((mem) => mem.mood).filter(Boolean))
+  ) as string[];
+
   const groupedResults = {
-    memories: searchResults,
+    memories: filteredMemories, // Use filteredMemories here
     tags: popularTags.filter((tag) =>
       tag.toLowerCase().includes(searchQuery.toLowerCase())
     ),
@@ -79,7 +123,7 @@ const SearchPage: React.FC = () => {
                 <Input
                   value={searchQuery}
                   onChange={(e) => setSearchQuery(e.target.value)}
-                  placeholder="Search memories, tags, dates..."
+                  placeholder="Search memories,..."
                   className="pl-12 text-lg py-3"
                 />
                 <Search className="w-5 h-5 absolute left-4 top-1/2 transform -translate-y-1/2 text-neutral-400" />
@@ -92,23 +136,96 @@ const SearchPage: React.FC = () => {
 
               {/* Quick Filters */}
               <div className="flex items-center space-x-4">
-                <Button variant="secondary" size="sm">
+                <Button
+                  variant="secondary"
+                  size="sm"
+                  onClick={() => setFilterModalOpen(true)}
+                >
                   <Filter className="w-4 h-4 mr-2" />
                   Filters
-                </Button>
-                <Button variant="secondary" size="sm">
-                  <Calendar className="w-4 h-4 mr-2" />
-                  Date Range
-                </Button>
-                <Button variant="secondary" size="sm">
-                  <TagIcon className="w-4 h-4 mr-2" />
-                  Tags
                 </Button>
               </div>
             </div>
 
+            <Modal
+              isOpen={filterModalOpen}
+              onClose={() => setFilterModalOpen(false)}
+              title="Filter Memories"
+            >
+              <div className="space-y-4">
+                <div>
+                  <h3 className="text-lg font-medium text-neutral-900 mb-2">
+                    Date Range
+                  </h3>
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    <DatePicker
+                      label="Start Date"
+                      value={
+                        startDate ? startDate.toISOString().split("T")[0] : ""
+                      }
+                      onChange={(date) =>
+                        setStartDate(date ? new Date(date) : null)
+                      }
+                    />
+                    <DatePicker
+                      label="End Date"
+                      value={endDate ? endDate.toISOString().split("T")[0] : ""}
+                      onChange={(date) =>
+                        setEndDate(date ? new Date(date) : null)
+                      }
+                    />
+                  </div>
+                </div>
+                <div>
+                  <h3 className="text-lg font-medium text-neutral-900 mb-2">
+                    Tags
+                  </h3>
+                  <MultiSelect
+                    options={availableTags.map((tag) => ({
+                      label: tag,
+                      value: tag,
+                    }))}
+                    value={selectedTags}
+                    onChange={setSelectedTags}
+                    placeholder="Select tags"
+                  />
+                </div>
+                <div>
+                  <h3 className="text-lg font-medium text-neutral-900 mb-2">
+                    Moods
+                  </h3>
+                  <MultiSelect
+                    options={availableMoods.map((mood) => ({
+                      label: mood,
+                      value: mood,
+                    }))}
+                    value={selectedMoods}
+                    onChange={setSelectedMoods}
+                    placeholder="Select moods"
+                  />
+                </div>
+                <div className="flex justify-end space-x-2">
+                  <Button
+                    variant="secondary"
+                    onClick={() => {
+                      setSelectedTags([]);
+                      setSelectedMoods([]);
+                      setStartDate(null);
+                      setEndDate(null);
+                    }}
+                  >
+                    Clear Filters
+                  </Button>
+                </div>
+              </div>
+            </Modal>
+
             {/* Search Results */}
-            {searchQuery ? (
+            {searchQuery ||
+            selectedTags.length > 0 ||
+            selectedMoods.length > 0 ||
+            startDate ||
+            endDate ? (
               <div className="mt-8 space-y-8">
                 {/* Memories Results */}
                 {groupedResults.memories.length > 0 && (
@@ -154,7 +271,11 @@ const SearchPage: React.FC = () => {
                     <EmptyState
                       icon={Search}
                       title="No results found"
-                      description={`No memories found for "${searchQuery}". Try different keywords or check your spelling.`}
+                      description={
+                        searchQuery
+                          ? `No memories found for "${searchQuery}". Try different keywords or check your spelling.`
+                          : "No memories match your selected filters. Try adjusting them."
+                      }
                     />
                   )}
               </div>
@@ -192,7 +313,9 @@ const SearchPage: React.FC = () => {
                       <Tag
                         key={tag}
                         className="cursor-pointer hover:bg-primary-200"
-                        onClick={() => setSearchQuery(tag)}
+                        onClick={() => {
+                          setSearchQuery(tag), console.log("test");
+                        }}
                       >
                         {tag}
                       </Tag>

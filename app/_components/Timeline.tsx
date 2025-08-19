@@ -43,7 +43,6 @@ const Timeline: React.FC<TimelineProps> = ({
     acc[year][month][day].push(memory);
     return acc;
   }, {} as Record<number, Record<number, Record<number, Memory[]>>>);
-  console.log(groupedMemories);
 
   const monthNames = [
     "January",
@@ -209,9 +208,13 @@ const Timeline: React.FC<TimelineProps> = ({
                                             <MemoryCard
                                               key={memory.id}
                                               memory={memory}
-                                              onClick={() =>
-                                                onMemoryClick(memory)
-                                              }
+                                              onClick={() => {
+                                                console.log(
+                                                  "Memory clicked:",
+                                                  memory
+                                                ),
+                                                  onMemoryClick(memory);
+                                              }}
                                               onEdit={() =>
                                                 onEditMemory(memory)
                                               } // Pass onEditMemory

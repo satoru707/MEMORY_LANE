@@ -84,11 +84,8 @@ function App() {
 
   useEffect(() => {
     setInterval(() => {
-      if (
-        localStorage.getItem("route") &&
-        localStorage.getItem("route") == "settings"
-      ) {
-        setCurrentPage("settings");
+      if (localStorage.getItem("route")) {
+        setCurrentPage(localStorage.getItem("route"));
         localStorage.removeItem("route");
       }
     }, 1000); // Show notifications every 5 seconds
@@ -210,6 +207,7 @@ function App() {
         memoryId={viewingMemoryDetail}
         onBack={handleBackToTimeline}
         onEdit={handleEditMemory}
+        onShareMemory={handleShareMemory}
       />
     );
   }
@@ -239,7 +237,7 @@ function App() {
         />
 
         {/* Main Content */}
-        <main className="flex-1 lg:ml-32">
+        <main className="flex-1 lg:ml-64">
           {currentPage === "timeline" && (
             <div className="min-h-screen bg-neutral-50">
               <div className="p-6">

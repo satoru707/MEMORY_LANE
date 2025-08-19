@@ -24,12 +24,14 @@ interface MemoryDetailPageProps {
   memoryId: string;
   onBack: () => void;
   onEdit: (memory: Memory) => void;
+  onShareMemory?: (memory: Memory) => void;
 }
 
 const MemoryDetailPage: React.FC<MemoryDetailPageProps> = ({
   memoryId,
   onBack,
   onEdit,
+  onShareMemory,
 }) => {
   const [lightboxOpen, setLightboxOpen] = useState(false);
   const [currentImageIndex, setCurrentImageIndex] = useState(0);
@@ -84,14 +86,23 @@ const MemoryDetailPage: React.FC<MemoryDetailPageProps> = ({
             >
               <Edit className="w-4 h-4" />
             </Button>
-            <Button variant="secondary" size="icon">
-              <Share className="w-4 h-4" />
+            <Button
+              variant="secondary"
+              onClick={(e) => {
+                e.stopPropagation();
+                onShareMemory?.(memory); // Pass memory object
+              }}
+              size="icon"
+            >
+              {memory.isPublic ? (
+                <Download className="w-4 h-4" />
+              ) : (
+                <Share className="w-4 h-4" />
+              )}{" "}
             </Button>
+            {/* add download functionality */}
             <Button variant="secondary" size="icon">
               <Download className="w-4 h-4" />
-            </Button>
-            <Button variant="ghost" size="icon">
-              <MoreHorizontal className="w-4 h-4" />
             </Button>
           </div>
         </div>

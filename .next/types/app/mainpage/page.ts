@@ -1,4 +1,4 @@
-// File: /home/praise-olaoye/Documents/VS Code/Memory_Lane/app/mainpage/page.tsx
+// File: /home/praise-olaoye/Documents/VS Code/Memory_Lane /app/mainpage/page.tsx
 import * as entry from '../../../../app/mainpage/page.js'
 import type { ResolvingMetadata, ResolvingViewport } from 'next/dist/lib/metadata/types/metadata-interface.js'
 

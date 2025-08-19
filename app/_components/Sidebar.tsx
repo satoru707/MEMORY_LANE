@@ -47,11 +47,13 @@ const Sidebar: React.FC<SidebarProps> = ({
       {/* Sidebar */}
       <aside
         className={cn(
-          "fixed inset-y-0 left-0 z-40 w-64 bg-white border-r border-neutral-200 transform transition-transform duration-200 ease-in-out lg:translate-x-0 lg:static lg:inset-0",
-          isOpen ? "translate-x-0" : "-translate-x-full"
+          "fixed inset-y-0 left-0 w-64 bg-white border-r border-neutral-200 transform transition-transform duration-200 ease-in-out",
+          "h-full overflow-y-auto z-40", // z-40 for mobile overlay compatibility
+          isOpen ? "translate-x-0" : "-translate-x-full", // Mobile slide in/out
+          "lg:translate-x-0 lg:z-20 lg:pt-20 lg:pb-4" // Always visible on desktop, lower z-index, adjusted padding
         )}
       >
-        <div className="flex flex-col">
+        <div className="flex-col h-full">
           {/* Navigation */}
           <nav className="flex-1 px-4 py-6 space-y-2">
             {navigation.map((item) => {
