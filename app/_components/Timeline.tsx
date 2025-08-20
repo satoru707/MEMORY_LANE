@@ -4,8 +4,6 @@ import { ChevronDown, ChevronRight, Filter, Search } from "lucide-react";
 import { Memory } from "@/types/types";
 import MemoryCard from "./MemoryCard";
 import Button from "./ui/Button";
-import Input from "./ui/Input";
-import { cn } from "@/lib/utils";
 
 interface TimelineProps {
   memories: Memory[];
@@ -26,8 +24,6 @@ const Timeline: React.FC<TimelineProps> = ({
     new Set([2024])
   );
   const [expandedMonths, setExpandedMonths] = useState<Set<string>>(new Set());
-  const [searchTerm, setSearchTerm] = useState("");
-  const [showFilters, setShowFilters] = useState(false);
 
   // Group memories by year, month, and day
   const groupedMemories = memories.reduce((acc, memory) => {
@@ -81,39 +77,6 @@ const Timeline: React.FC<TimelineProps> = ({
 
   return (
     <div className="space-y-6">
-      {/* Search and Filters */}
-      {/* <div className="bg-white p-4 rounded-xl border border-neutral-200 shadow-soft">
-        <div className="flex flex-col sm:flex-row gap-4">
-          <div className="flex-1">
-            <Input
-              placeholder="Search memories..."
-              value={searchTerm}
-              onChange={(e) => setSearchTerm(e.target.value)}
-              className="pl-10"
-            />
-            <Search className="w-5 h-5 absolute left-3 top-1/2 transform -translate-y-1/2 text-neutral-400 pointer-events-none" />
-          </div>
-          <Button
-            variant="secondary"
-            onClick={() => setShowFilters(!showFilters)}
-            className="flex items-center space-x-2"
-          >
-            <Filter className="w-4 h-4" />
-            <span>Filters</span>
-          </Button>
-        </div>
-
-        {showFilters && (
-          <div className="mt-4 pt-4 border-t border-neutral-200">
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-              <Input placeholder="Date range..." />
-              <Input placeholder="Tags..." />
-              <Input placeholder="Mood..." />
-            </div>
-          </div>
-        )}
-      </div> */}
-
       {/* Timeline */}
       <div className="space-y-8">
         {Object.keys(groupedMemories).length > 0 ? (
@@ -209,11 +172,7 @@ const Timeline: React.FC<TimelineProps> = ({
                                               key={memory.id}
                                               memory={memory}
                                               onClick={() => {
-                                                console.log(
-                                                  "Memory clicked:",
-                                                  memory
-                                                ),
-                                                  onMemoryClick(memory);
+                                                onMemoryClick(memory);
                                               }}
                                               onEdit={() =>
                                                 onEditMemory(memory)

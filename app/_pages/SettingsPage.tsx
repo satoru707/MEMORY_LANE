@@ -16,6 +16,7 @@ import Input from "@/components/ui/Input";
 import Select from "@/components/ui/Select";
 import ConfirmDialog from "@/components/ui/ConfirmDialog";
 import { sampleUser } from "@/data/sampleData";
+import MediaUploader from "../_components/ui/MediaUploader";
 
 const SettingsPage: React.FC = () => {
   const [sidebarOpen, setSidebarOpen] = useState(false);
@@ -69,6 +70,7 @@ const SettingsPage: React.FC = () => {
                       email: e.target.value,
                     }))
                   }
+                  disabled
                 />
               </div>
             </div>
@@ -92,9 +94,10 @@ const SettingsPage: React.FC = () => {
                   )}
                 </div>
                 <div className="space-x-2">
-                  <Button variant="secondary" size="sm">
+                  <Input type="file" className="hidden" accept="image/*">
                     Change Photo
-                  </Button>
+                  </Input>
+
                   <Button variant="ghost" size="sm">
                     Remove
                   </Button>

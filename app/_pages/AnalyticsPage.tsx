@@ -15,7 +15,6 @@ import Select from "@/components/ui/Select";
 import { moodColors, analytics, timeRangeOptions } from "@/data/sampleData";
 
 const AnalyticsPage: React.FC = () => {
-  const [sidebarOpen, setSidebarOpen] = useState(false);
   const [timeRange, setTimeRange] = useState("year");
 
   return (

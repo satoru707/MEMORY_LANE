@@ -265,7 +265,14 @@ function App() {
             </div>
           )}
 
-          {currentPage === "search" && <SearchPage />}
+          {currentPage === "search" && (
+            <SearchPage
+              onMemoryClick={handleMemoryClick}
+              onEditMemory={handleEditMemory}
+              onDeleteMemory={handleDeleteMemory}
+              onShareMemory={handleShareMemory}
+            />
+          )}
           {currentPage === "tags" && <TagsPage />}
           {currentPage === "stories" && <StoryGeneratorPage />}
           {currentPage === "settings" && <SettingsPage />}

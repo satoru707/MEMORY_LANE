@@ -1,19 +1,15 @@
 "use client";
 import React, { useState } from "react";
-import {
-  BookOpen,
-  Calendar,
-  Wand2,
-  Download,
-  FileText,
-  Share,
-} from "lucide-react";
+import { BookOpen, Wand2, Download, FileText, Share } from "lucide-react";
 import Button from "@/components/ui/Button";
 import Card from "@/components/ui/Card";
 import Select from "@/components/ui/Select";
 import DatePicker from "@/components/ui/DatePicker";
 import Loader from "@/components/ui/Loader";
 import { sampleStoryExample } from "@/data/sampleData";
+import Input from "../_components/ui/Input";
+import { jsPDF } from "jspdf";
+import { Document, Paragraph, Packer, TextRun } from "docx";
 
 interface StorySettings {
   dateRange: {
@@ -26,7 +22,6 @@ interface StorySettings {
 }
 
 const StoryGeneratorPage: React.FC = () => {
-  const [sidebarOpen, setSidebarOpen] = useState(false);
   const [settings, setSettings] = useState<StorySettings>({
     dateRange: {
       start: "2024-01-01",
@@ -39,6 +34,7 @@ const StoryGeneratorPage: React.FC = () => {
   const [isGenerating, setIsGenerating] = useState(false);
   const [generatedStory, setGeneratedStory] = useState<string | null>(null);
   const [progress, setProgress] = useState(0);
+  const [fileName, setFileName] = useState("story");
 
   const toneOptions = [
     { value: "reflective", label: "Reflective & Thoughtful" },
@@ -70,14 +66,49 @@ const StoryGeneratorPage: React.FC = () => {
       await new Promise((resolve) => setTimeout(resolve, 1000));
       setProgress(((i + 1) / steps.length) * 100);
     }
+    console.log("Settings", settings);
 
     setGeneratedStory(sampleStoryExample);
     setIsGenerating(false);
   };
 
-  const handleExport = (format: "pdf" | "docx") => {
-    // Simulate export
-    console.log(`Exporting story as ${format.toUpperCase()}`);
+  const handleExport = async (format: "pdf" | "docx") => {
+    if (!generatedStory) return;
+
+    const fileNameWithExtension = `${fileName}.${format}`;
+
+    if (format === "pdf") {
+      const doc = new jsPDF();
+      doc.text(generatedStory, 10, 10);
+      doc.save(fileNameWithExtension);
+    } else if (format === "docx") {
+      const doc = new Document({
+        sections: [
+          {
+            properties: {},
+            children: [
+              new Paragraph({
+                children: [new TextRun(generatedStory)],
+              }),
+            ],
+          },
+        ],
+      });
+
+      Packer.toBlob(doc).then((blob) => {
+        const url = URL.createObjectURL(blob);
+        const a = document.createElement("a");
+        a.href = url;
+        a.download = fileNameWithExtension;
+        document.body.appendChild(a);
+        a.click();
+        document.body.removeChild(a);
+        URL.revokeObjectURL(url);
+      });
+    }
+    console.log(
+      `Exporting story as ${format.toUpperCase()} with filename ${fileNameWithExtension}`
+    );
   };
 
   return (
@@ -168,6 +199,7 @@ const StoryGeneratorPage: React.FC = () => {
                           type="checkbox"
                           id="includeImages"
                           checked={settings.includeImages}
+                          disabled
                           onChange={(e) =>
                             setSettings((prev) => ({
                               ...prev,
@@ -180,7 +212,10 @@ const StoryGeneratorPage: React.FC = () => {
                           htmlFor="includeImages"
                           className="text-sm text-neutral-700"
                         >
-                          Include images in story
+                          Include images in story{" "}
+                          <span className="text-xs text-amber-500 font-semibold ml-1">
+                            (Premium)
+                          </span>
                         </label>
                       </div>
                     </div>
@@ -224,11 +259,20 @@ const StoryGeneratorPage: React.FC = () => {
                         Export Options
                       </h3>
                       <div className="space-y-2">
+                        {/* export file name input */}
+                        <Input
+                          label="File Name"
+                          placeholder="Enter file name"
+                          type="text"
+                          value={fileName}
+                          onChange={(e) => setFileName(e.target.value)}
+                        />
                         <Button
                           variant="secondary"
                           size="sm"
                           onClick={() => handleExport("pdf")}
                           className="w-full justify-start"
+                          disabled={fileName.trim() == "" ? true : false}
                         >
                           <FileText className="w-4 h-4 mr-2" />
                           Export as PDF
@@ -238,17 +282,10 @@ const StoryGeneratorPage: React.FC = () => {
                           size="sm"
                           onClick={() => handleExport("docx")}
                           className="w-full justify-start"
+                          disabled={fileName.trim() == "" ? true : false}
                         >
                           <Download className="w-4 h-4 mr-2" />
                           Export as Word
-                        </Button>
-                        <Button
-                          variant="secondary"
-                          size="sm"
-                          className="w-full justify-start"
-                        >
-                          <Share className="w-4 h-4 mr-2" />
-                          Share Story
                         </Button>
                       </div>
                     </Card>

@@ -11,7 +11,19 @@ import { sampleMemories } from "@/data/sampleData";
 import DatePicker from "@/components/ui/DatePicker";
 import MultiSelect from "@/components/ui/MultiSelect";
 
-const SearchPage: React.FC = () => {
+interface SearchPageProps {
+  onMemoryClick: (memory: Memory) => void;
+  onEditMemory: (memory: Memory) => void;
+  onDeleteMemory: (memoryId: string) => void;
+  onShareMemory: (memory: Memory) => void;
+}
+
+const SearchPage: React.FC<SearchPageProps> = ({
+  onMemoryClick,
+  onEditMemory,
+  onDeleteMemory,
+  onShareMemory,
+}) => {
   const [searchQuery, setSearchQuery] = useState("");
   const [searchResults, setSearchResults] = useState<Memory[]>([]);
   const [isSearching, setIsSearching] = useState(false);
@@ -104,9 +116,9 @@ const SearchPage: React.FC = () => {
 
   return (
     <div className="min-h-screen bg-neutral-50">
-      <div className="flex">
+      <div className="">
         <main className="flex">
-          <div className="p-6 max-w-4xl mx-auto">
+          <div className="p-6 ">
             {/* Search Header */}
             <div className="space-y-6">
               <div>
@@ -238,27 +250,13 @@ const SearchPage: React.FC = () => {
                         <MemoryCard
                           key={memory.id}
                           memory={memory}
-                          onClick={() => {}}
+                          onClick={() => {
+                            onMemoryClick(memory);
+                          }}
+                          onEdit={() => onEditMemory(memory)} // Pass onEditMemory
+                          onDelete={() => onDeleteMemory(memory.id)} // Pass onDeleteMemory
+                          onShareMemory={() => onShareMemory(memory)} // Pass onShareMemory
                         />
-                      ))}
-                    </div>
-                  </div>
-                )}
-
-                {/* Tags Results */}
-                {groupedResults.tags.length > 0 && (
-                  <div className="space-y-4">
-                    <h2 className="text-xl font-semibold text-neutral-900">
-                      Tags ({groupedResults.tags.length})
-                    </h2>
-                    <div className="flex flex-wrap gap-2">
-                      {groupedResults.tags.map((tag) => (
-                        <Tag
-                          key={tag}
-                          className="cursor-pointer hover:bg-primary-200"
-                        >
-                          {tag}
-                        </Tag>
                       ))}
                     </div>
                   </div>
@@ -271,11 +269,20 @@ const SearchPage: React.FC = () => {
                     <EmptyState
                       icon={Search}
                       title="No results found"
-                      description={
-                        searchQuery
-                          ? `No memories found for "${searchQuery}". Try different keywords or check your spelling.`
-                          : "No memories match your selected filters. Try adjusting them."
-                      }
+                      description={`No memories found for "${searchQuery}". Try different keywords or check your spelling.`}
+                    />
+                  )}
+
+                {filteredMemories.length === 0 &&
+                  (endDate ||
+                    startDate ||
+                    selectedMoods.length > 0 ||
+                    selectedTags.length > 0) &&
+                  !searchQuery && (
+                    <EmptyState
+                      icon={Search}
+                      title="No results found"
+                      description="No memories match your selected filters. Try adjusting them."
                     />
                   )}
               </div>
