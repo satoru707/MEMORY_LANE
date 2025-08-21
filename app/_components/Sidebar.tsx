@@ -13,6 +13,7 @@ import {
 } from "lucide-react";
 import { cn } from "@/lib/utils";
 import Button from "./ui/Button";
+import { analytics, sampleMemories } from "@/data/sampleData";
 
 interface SidebarProps {
   isOpen: boolean;
@@ -89,15 +90,26 @@ const Sidebar: React.FC<SidebarProps> = ({
               <div className="space-y-1 text-sm text-neutral-600">
                 <div className="flex justify-between">
                   <span>Total Memories</span>
-                  <span className="font-medium">247</span>
+                  <span className="font-medium">{analytics.totalMemories}</span>
                 </div>
                 <div className="flex justify-between">
                   <span>This Month</span>
-                  <span className="font-medium">18</span>
+                  <span className="font-medium">
+                    {analytics.memoriesThisMonth}
+                  </span>
                 </div>
                 <div className="flex justify-between">
                   <span>Tags</span>
-                  <span className="font-medium">34</span>
+                  <span className="font-medium">
+                    {" "}
+                    {
+                      sampleMemories.filter(
+                        (mem) =>
+                          mem.date.split("-")[1] ===
+                          `${new Date().getMonth() + 1}`
+                      ).length
+                    }
+                  </span>
                 </div>
               </div>
             </div>

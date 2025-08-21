@@ -215,7 +215,6 @@ function App() {
   return (
     <div className="min-h-screen bg-neutral-50">
       {/* Offline Banner */}
-      <OfflineBanner isVisible={!isOnline} />
 
       {/* Header */}
       <Header
@@ -226,6 +225,7 @@ function App() {
         syncStatus={isOnline ? "online" : "offline"}
         notificationCount={notifications.filter((n) => !n.read).length}
       />
+      <OfflineBanner isVisible={!isOnline} />
 
       <div className="flex">
         {/* Sidebar */}

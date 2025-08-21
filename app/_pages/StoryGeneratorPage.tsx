@@ -78,8 +78,35 @@ const StoryGeneratorPage: React.FC = () => {
     const fileNameWithExtension = `${fileName}.${format}`;
 
     if (format === "pdf") {
-      const doc = new jsPDF();
-      doc.text(generatedStory, 10, 10);
+      const doc = new jsPDF({
+        orientation: "portrait",
+        unit: "mm",
+        format: "a4",
+      });
+      // Title and author
+      //  doc.setFont("helvetica", "bold");
+      //  doc.setFontSize(24);
+      const paragraphs = generatedStory
+        .split("\n")
+        .filter((line) => line.trim() !== "")
+        .map((line) => line.trim());
+
+      const formattedParagraphs = paragraphs.map((para, index) => {
+        if (index === 0) return para; // Title remains unchanged
+        // Split by sentence or idea, adding separators
+        const sentences = para.split(". ").map((sentence) => sentence.trim());
+        return sentences
+          .filter((s) => s)
+          .map((s, i) => (i > 0 ? `---- ${s}.` : `${s}.`))
+          .join(" ");
+      });
+
+      let yPosition = 40;
+      formattedParagraphs.forEach((paragraph, index) => {
+        doc.text(paragraph, 20, yPosition);
+        yPosition += 10; // Space between paragraphs
+      });
+
       doc.save(fileNameWithExtension);
     } else if (format === "docx") {
       const doc = new Document({
@@ -198,7 +225,7 @@ const StoryGeneratorPage: React.FC = () => {
                         <input
                           type="checkbox"
                           id="includeImages"
-                          checked={settings.includeImages}
+                          checked={false}
                           disabled
                           onChange={(e) =>
                             setSettings((prev) => ({

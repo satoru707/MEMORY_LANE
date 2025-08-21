@@ -12,15 +12,165 @@ import {
 import Card from "@/components/ui/Card";
 import StatCard from "@/components/ui/StatCard";
 import Select from "@/components/ui/Select";
-import { moodColors, analytics, timeRangeOptions } from "@/data/sampleData";
+import {
+  moodColors,
+  analytics,
+  timeRangeOptions,
+  sampleMemories,
+} from "@/data/sampleData";
 
 const AnalyticsPage: React.FC = () => {
   const [timeRange, setTimeRange] = useState("year");
 
+  const filterMemories = (memories: typeof sampleMemories, range: string) => {
+    const now = new Date();
+    let startDate = new Date();
+
+    switch (range) {
+      case "week":
+        startDate.setDate(now.getDate() - 7);
+        break;
+      case "month":
+        startDate.setMonth(now.getMonth() - 1);
+        break;
+      case "quarter":
+        startDate.setMonth(now.getMonth() - 3);
+        break;
+      case "year":
+        startDate.setFullYear(now.getFullYear() - 1);
+        break;
+      case "all":
+      default:
+        return memories;
+    }
+
+    return memories.filter((memory) => {
+      const memoryDate = new Date(memory.date);
+      return memoryDate >= startDate && memoryDate <= now;
+    });
+  };
+
+  const filteredMemories = filterMemories(sampleMemories, timeRange);
+
+  // Recalculate analytics based on filtered memories
+  const calculatedAnalytics = {
+    totalMemories: filteredMemories.length,
+    memoriesThisMonth: filteredMemories.filter((memory) => {
+      const memoryDate = new Date(memory.date);
+      return (
+        memoryDate.getMonth() === new Date().getMonth() &&
+        memoryDate.getFullYear() === new Date().getFullYear()
+      );
+    }).length,
+    averagePerWeek: parseFloat(((filteredMemories.length / 52) * 4).toFixed(1)),
+    longestStreak: 0, // This would require more complex logic to calculate based on dates
+    topMoods: [], // Placeholder, will be calculated dynamically
+    topTags: [], // Placeholder, will be calculated dynamically
+    monthlyActivity: [], // Placeholder, will be calculated dynamically
+    weeklyPattern: [], // Placeholder, will be calculated dynamically
+  };
+
+  // Helper function to calculate top moods from filtered memories
+  const calculateTopMoods = (memories: typeof sampleMemories) => {
+    const moodCounts: { [key: string]: number } = {};
+    memories.forEach((memory) => {
+      moodCounts[memory.mood] = (moodCounts[memory.mood] || 0) + 1;
+    });
+
+    const total = memories.length;
+    return Object.entries(moodCounts)
+      .map(([mood, count]) => ({
+        mood,
+        count,
+        percentage:
+          total > 0 ? parseFloat(((count / total) * 100).toFixed(0)) : 0,
+      }))
+      .sort((a, b) => b.count - a.count)
+      .slice(0, 5);
+  };
+
+  // Helper function to calculate top tags from filtered memories
+  const calculateTopTags = (memories: typeof sampleMemories) => {
+    const tagCounts: { [key: string]: number } = {};
+    memories.forEach((memory) => {
+      memory.tags.forEach((tag) => {
+        tagCounts[tag] = (tagCounts[tag] || 0) + 1;
+      });
+    });
+
+    const total = memories.length;
+    return Object.entries(tagCounts)
+      .map(([tag, count]) => ({
+        tag,
+        count,
+        percentage:
+          total > 0 ? parseFloat(((count / total) * 100).toFixed(0)) : 0,
+      }))
+      .sort((a, b) => b.count - a.count)
+      .slice(0, 5);
+  };
+
+  // Helper function to calculate monthly activity
+  const calculateMonthlyActivity = (memories: typeof sampleMemories) => {
+    const monthlyCounts: { [key: string]: number } = {};
+    const monthNames = [
+      "Jan",
+      "Feb",
+      "Mar",
+      "Apr",
+      "May",
+      "Jun",
+      "Jul",
+      "Aug",
+      "Sep",
+      "Oct",
+      "Nov",
+      "Dec",
+    ];
+
+    memories.forEach((memory) => {
+      const date = new Date(memory.date);
+      const month = monthNames[date.getMonth()];
+      monthlyCounts[month] = (monthlyCounts[month] || 0) + 1;
+    });
+
+    return monthNames.map((month) => ({
+      month,
+      memories: monthlyCounts[month] || 0,
+    }));
+  };
+
+  // Helper function to calculate weekly pattern
+  const calculateWeeklyPattern = (memories: typeof sampleMemories) => {
+    const weeklyCounts: { [key: string]: number } = {};
+    const dayNames = ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"];
+
+    memories.forEach((memory) => {
+      const date = new Date(memory.date);
+      const day = dayNames[date.getDay()];
+      weeklyCounts[day] = (weeklyCounts[day] || 0) + 1;
+    });
+
+    return dayNames.map((day) => ({
+      day,
+      memories: weeklyCounts[day] || 0,
+    }));
+  };
+
+  // Update calculatedAnalytics with dynamic data
+  calculatedAnalytics.topMoods = calculateTopMoods(filteredMemories);
+  calculatedAnalytics.topTags = calculateTopTags(filteredMemories);
+  calculatedAnalytics.monthlyActivity =
+    calculateMonthlyActivity(filteredMemories);
+  calculatedAnalytics.weeklyPattern = calculateWeeklyPattern(filteredMemories);
+
+  const displayAnalytics =
+    timeRange === "all" ? analytics : calculatedAnalytics;
+
   return (
     <div className="min-h-screen bg-neutral-50">
-      <div className="flex">
-        <main className="flex">
+      <div className="">
+        <main className="">
           <div className="p-6">
             <div className="space-y-6">
               <div className="flex items-center justify-between">
@@ -47,25 +197,25 @@ const AnalyticsPage: React.FC = () => {
               <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
                 <StatCard
                   title="Total Memories"
-                  value={analytics.totalMemories.toLocaleString()}
+                  value={displayAnalytics.totalMemories.toLocaleString()}
                   icon={Calendar}
                   change={{ value: "+12%", trend: "up" }}
                 />
                 <StatCard
                   title="This Month"
-                  value={analytics.memoriesThisMonth.toString()}
+                  value={displayAnalytics.memoriesThisMonth.toString()}
                   icon={TrendingUp}
                   change={{ value: "+3", trend: "up" }}
                 />
                 <StatCard
                   title="Weekly Average"
-                  value={analytics.averagePerWeek.toString()}
+                  value={displayAnalytics.averagePerWeek.toString()}
                   icon={BarChart3}
                   change={{ value: "+0.5", trend: "up" }}
                 />
                 <StatCard
                   title="Longest Streak"
-                  value={`${analytics.longestStreak} days`}
+                  value={`${displayAnalytics.longestStreak} days`}
                   icon={Clock}
                   change={{ value: "Personal best!", trend: "up" }}
                 />
@@ -82,7 +232,7 @@ const AnalyticsPage: React.FC = () => {
                   </div>
                   <div className="p-6">
                     <div className="space-y-4">
-                      {analytics.monthlyActivity.map((month) => (
+                      {displayAnalytics.monthlyActivity.map((month) => (
                         <div
                           key={month.month}
                           className="flex items-center space-x-4"
@@ -118,7 +268,7 @@ const AnalyticsPage: React.FC = () => {
                   </div>
                   <div className="p-6">
                     <div className="space-y-4">
-                      {analytics.weeklyPattern.map((day) => (
+                      {displayAnalytics.weeklyPattern.map((day) => (
                         <div
                           key={day.day}
                           className="flex items-center space-x-4"
@@ -160,7 +310,7 @@ const AnalyticsPage: React.FC = () => {
                   </div>
                   <div className="p-6">
                     <div className="space-y-4">
-                      {analytics.topMoods.map((mood) => (
+                      {displayAnalytics.topMoods.map((mood) => (
                         <div
                           key={mood.mood}
                           className="flex items-center space-x-4"
@@ -186,7 +336,7 @@ const AnalyticsPage: React.FC = () => {
                                     mood.mood as keyof typeof moodColors
                                   ]
                                 }`}
-                                style={{ width: `${mood.percentage * 5}%` }}
+                                style={{ width: `${mood.percentage}%` }}
                               />
                             </div>
                           </div>
@@ -208,7 +358,7 @@ const AnalyticsPage: React.FC = () => {
                   </div>
                   <div className="p-6">
                     <div className="space-y-4">
-                      {analytics.topTags.map((tag) => (
+                      {displayAnalytics.topTags.map((tag) => (
                         <div
                           key={tag.tag}
                           className="flex items-center space-x-4"
@@ -226,7 +376,7 @@ const AnalyticsPage: React.FC = () => {
                             <div className="w-full bg-neutral-200 rounded-full h-2">
                               <div
                                 className="bg-primary-600 h-2 rounded-full transition-all duration-300"
-                                style={{ width: `${tag.percentage * 3}%` }}
+                                style={{ width: `${tag.percentage}%` }}
                               />
                             </div>
                           </div>

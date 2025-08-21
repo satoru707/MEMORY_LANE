@@ -27,7 +27,7 @@ const TagsPage: React.FC = () => {
 
   return (
     <div className="min-h-screen bg-neutral-50">
-      <main className="flex">
+      <main className="flex   ">
         <div className="p-6">
           {!selectedTag ? (
             /* Tags Overview */

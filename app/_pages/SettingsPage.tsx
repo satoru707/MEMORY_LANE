@@ -16,20 +16,15 @@ import Input from "@/components/ui/Input";
 import Select from "@/components/ui/Select";
 import ConfirmDialog from "@/components/ui/ConfirmDialog";
 import { sampleUser } from "@/data/sampleData";
-import MediaUploader from "../_components/ui/MediaUploader";
 
 const SettingsPage: React.FC = () => {
-  const [sidebarOpen, setSidebarOpen] = useState(false);
   const [activeSection, setActiveSection] = useState("account");
   const [showDeleteDialog, setShowDeleteDialog] = useState(false);
   const [userSettings, setUserSettings] = useState(sampleUser);
 
   const sections = [
     { id: "account", label: "Account", icon: User },
-    { id: "privacy", label: "Privacy & Security", icon: Shield },
-    { id: "ai", label: "AI Preferences", icon: Bot },
     { id: "sync", label: "Sync & Backup", icon: Cloud },
-    { id: "notifications", label: "Notifications", icon: Bell },
     { id: "appearance", label: "Appearance", icon: Palette },
     { id: "data", label: "Data & Export", icon: Download },
   ];
@@ -94,9 +89,7 @@ const SettingsPage: React.FC = () => {
                   )}
                 </div>
                 <div className="space-x-2">
-                  <Input type="file" className="hidden" accept="image/*">
-                    Change Photo
-                  </Input>
+                  <Input type="file" className="hidden" accept="image/*" />
 
                   <Button variant="ghost" size="sm">
                     Remove
@@ -107,139 +100,6 @@ const SettingsPage: React.FC = () => {
 
             <div className="pt-4 border-t border-neutral-200">
               <Button>Save Changes</Button>
-            </div>
-          </div>
-        );
-
-      case "privacy":
-        return (
-          <div className="space-y-6">
-            <div>
-              <h2 className="text-xl font-semibold text-neutral-900 mb-4">
-                Privacy & Security
-              </h2>
-              <div className="space-y-4">
-                <div className="flex items-center justify-between p-4 border border-neutral-200 rounded-lg">
-                  <div>
-                    <h3 className="font-medium text-neutral-900">
-                      Two-Factor Authentication
-                    </h3>
-                    <p className="text-sm text-neutral-600">
-                      Add an extra layer of security
-                    </p>
-                  </div>
-                  <Button variant="secondary" size="sm">
-                    Enable
-                  </Button>
-                </div>
-
-                <div className="flex items-center justify-between p-4 border border-neutral-200 rounded-lg">
-                  <div>
-                    <h3 className="font-medium text-neutral-900">
-                      Login Sessions
-                    </h3>
-                    <p className="text-sm text-neutral-600">
-                      Manage your active sessions
-                    </p>
-                  </div>
-                  <Button variant="secondary" size="sm">
-                    View Sessions
-                  </Button>
-                </div>
-
-                <div className="flex items-center justify-between p-4 border border-neutral-200 rounded-lg">
-                  <div>
-                    <h3 className="font-medium text-neutral-900">
-                      Data Encryption
-                    </h3>
-                    <p className="text-sm text-neutral-600">
-                      Your memories are encrypted at rest
-                    </p>
-                  </div>
-                  <div className="flex items-center space-x-2">
-                    <div className="w-2 h-2 bg-success-500 rounded-full"></div>
-                    <span className="text-sm text-success-600">Enabled</span>
-                  </div>
-                </div>
-              </div>
-            </div>
-          </div>
-        );
-
-      case "ai":
-        return (
-          <div className="space-y-6">
-            <div>
-              <h2 className="text-xl font-semibold text-neutral-900 mb-4">
-                AI Preferences
-              </h2>
-              <div className="space-y-4">
-                <div className="flex items-center justify-between p-4 border border-neutral-200 rounded-lg">
-                  <div>
-                    <h3 className="font-medium text-neutral-900">
-                      AI Features
-                    </h3>
-                    <p className="text-sm text-neutral-600">
-                      Enable AI-powered insights and summaries
-                    </p>
-                  </div>
-                  <label className="relative inline-flex items-center cursor-pointer">
-                    <input
-                      type="checkbox"
-                      checked={userSettings.preferences.aiEnabled}
-                      onChange={(e) =>
-                        setUserSettings((prev) => ({
-                          ...prev,
-                          preferences: {
-                            ...prev.preferences,
-                            aiEnabled: e.target.checked,
-                          },
-                        }))
-                      }
-                      className="sr-only peer"
-                    />
-                    <div className="w-11 h-6 bg-neutral-200 peer-focus:outline-none peer-focus:ring-4 peer-focus:ring-primary-300 rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-neutral-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-primary-600"></div>
-                  </label>
-                </div>
-
-                <div className="flex items-center justify-between p-4 border border-neutral-200 rounded-lg">
-                  <div>
-                    <h3 className="font-medium text-neutral-900">
-                      Auto-Tagging
-                    </h3>
-                    <p className="text-sm text-neutral-600">
-                      Automatically suggest tags for new memories
-                    </p>
-                  </div>
-                  <label className="relative inline-flex items-center cursor-pointer">
-                    <input
-                      type="checkbox"
-                      defaultChecked
-                      className="sr-only peer"
-                    />
-                    <div className="w-11 h-6 bg-neutral-200 peer-focus:outline-none peer-focus:ring-4 peer-focus:ring-primary-300 rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-neutral-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-primary-600"></div>
-                  </label>
-                </div>
-
-                <div className="flex items-center justify-between p-4 border border-neutral-200 rounded-lg">
-                  <div>
-                    <h3 className="font-medium text-neutral-900">
-                      Story Generation
-                    </h3>
-                    <p className="text-sm text-neutral-600">
-                      Allow AI to create stories from your memories
-                    </p>
-                  </div>
-                  <label className="relative inline-flex items-center cursor-pointer">
-                    <input
-                      type="checkbox"
-                      defaultChecked
-                      className="sr-only peer"
-                    />
-                    <div className="w-11 h-6 bg-neutral-200 peer-focus:outline-none peer-focus:ring-4 peer-focus:ring-primary-300 rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-neutral-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-primary-600"></div>
-                  </label>
-                </div>
-              </div>
             </div>
           </div>
         );
@@ -275,38 +135,10 @@ const SettingsPage: React.FC = () => {
                         }))
                       }
                       className="sr-only peer"
+                      disabled
                     />
                     <div className="w-11 h-6 bg-neutral-200 peer-focus:outline-none peer-focus:ring-4 peer-focus:ring-primary-300 rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-neutral-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-primary-600"></div>
                   </label>
-                </div>
-
-                <div className="p-4 border border-neutral-200 rounded-lg">
-                  <div className="flex items-center justify-between mb-3">
-                    <h3 className="font-medium text-neutral-900">
-                      Storage Usage
-                    </h3>
-                    <span className="text-sm text-neutral-600">
-                      2.4 GB of 15 GB used
-                    </span>
-                  </div>
-                  <div className="w-full bg-neutral-200 rounded-full h-2">
-                    <div
-                      className="bg-primary-600 h-2 rounded-full"
-                      style={{ width: "16%" }}
-                    ></div>
-                  </div>
-                </div>
-
-                <div className="flex items-center justify-between p-4 border border-neutral-200 rounded-lg">
-                  <div>
-                    <h3 className="font-medium text-neutral-900">
-                      Last Backup
-                    </h3>
-                    <p className="text-sm text-neutral-600">2 hours ago</p>
-                  </div>
-                  <Button variant="secondary" size="sm">
-                    Backup Now
-                  </Button>
                 </div>
               </div>
             </div>

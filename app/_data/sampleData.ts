@@ -104,10 +104,10 @@ export const familyMemories: FamilyMemories[] = [
 
 // family member data
 export const timeRangeOptions = [
-  { value: "week", label: "Last 7 days" },
-  { value: "month", label: "Last 30 days" },
-  { value: "quarter", label: "Last 3 months" },
-  { value: "year", label: "Last 12 months" },
+  { value: "week", label: "Past 7 days" },
+  { value: "month", label: "Past 30 days" },
+  { value: "quarter", label: "Past 3 months" },
+  { value: "year", label: "Past 12 months" },
   { value: "all", label: "All time" },
 ];
 

@@ -20,7 +20,7 @@ const OfflineBanner: React.FC<OfflineBannerProps> = ({
     <div
       className={cn(
         "bg-warning-50 border-b border-warning-200 px-4 py-3",
-        "animate-slide-in",
+        "animate-slide-in w-full z-1000 ",
         className
       )}
     >
