@@ -131,7 +131,6 @@ const MemoryCard: React.FC<MemoryCardProps> = ({
                         e.stopPropagation();
                         onEdit?.(memory); // Pass memory object
                         setShowMenu(false);
-                        !isOnline ? (memory.syncStatus = "offline") : null;
                       }}
                       className="w-full px-4 py-2 text-left text-sm text-neutral-700 hover:bg-neutral-50 flex items-center space-x-2"
                     >
@@ -142,7 +141,6 @@ const MemoryCard: React.FC<MemoryCardProps> = ({
                       onClick={(e) => {
                         e.stopPropagation();
                         onShareMemory?.(memory); // Pass memory object
-                        !isOnline ? (memory.syncStatus = "offline") : null;
                         setShowMenu(false);
                       }}
                       className="w-full px-4 py-2 text-left text-sm text-neutral-700 hover:bg-neutral-50 flex items-center space-x-2"

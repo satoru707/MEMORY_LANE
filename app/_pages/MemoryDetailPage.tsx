@@ -9,16 +9,14 @@ import {
   MapPin,
   Calendar,
   Tag as TagIcon,
-  MoreHorizontal,
 } from "lucide-react";
 import Button from "@/components/ui/Button";
 import Card from "@/components/ui/Card";
 import Tag from "@/components/ui/Tag";
 import Modal from "@/components/ui/Modal";
 import { Memory } from "@/types/types";
-import { db } from "@/lib/utils"; // Import db
-import { useLiveQuery } from "dexie-react-hooks"; // Import useLiveQuery
-// import { sampleMemories } from "@/data/sampleData"; // Remove this line
+import { db } from "@/lib/utils";
+import { useLiveQuery } from "dexie-react-hooks";
 
 interface MemoryDetailPageProps {
   memoryId: string;
@@ -101,9 +99,6 @@ const MemoryDetailPage: React.FC<MemoryDetailPageProps> = ({
               )}{" "}
             </Button>
             {/* add download functionality */}
-            <Button variant="secondary" size="icon">
-              <Download className="w-4 h-4" />
-            </Button>
           </div>
         </div>
 

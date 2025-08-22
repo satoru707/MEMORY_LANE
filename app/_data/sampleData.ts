@@ -14,6 +14,36 @@ export const sampleUser: User = {
   },
 };
 
+export const notification = [
+  {
+    id: "notif-1",
+    type: "memory_shared" as const,
+    title: "Mom shared a memory",
+    message:
+      "Family Thanksgiving Dinner - What an amazing Thanksgiving we had this year!",
+    timestamp: new Date(Date.now() - 2 * 60 * 60 * 1000).toISOString(),
+    read: false,
+    avatar:
+      "https://images.pexels.com/photos/1239291/pexels-photo-1239291.jpeg?auto=compress&cs=tinysrgb&w=150",
+  },
+  {
+    id: "notif-2",
+    type: "comment" as const,
+    title: "Dad commented on your memory",
+    message: "Great photo! I remember that day so well.",
+    timestamp: new Date(Date.now() - 4 * 60 * 60 * 1000).toISOString(),
+    read: false,
+  },
+  {
+    id: "notif-3",
+    type: "family_invite" as const,
+    title: "Family invitation sent",
+    message: "Your invitation to Emma was sent successfully.",
+    timestamp: new Date(Date.now() - 24 * 60 * 60 * 1000).toISOString(),
+    read: true,
+  },
+];
+
 // fetch comments and reactions with id
 export const familyMemories: FamilyMemories[] = [
   {

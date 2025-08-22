@@ -168,7 +168,7 @@ const AnalyticsPage: React.FC = () => {
     timeRange === "all" ? analytics : calculatedAnalytics;
 
   return (
-    <div className="min-h-screen bg-neutral-50">
+    <div className="min-h-fit bg-neutral-50">
       <div className="">
         <main className="">
           <div className="p-6">

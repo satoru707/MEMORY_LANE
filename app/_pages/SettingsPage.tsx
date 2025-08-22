@@ -1,5 +1,5 @@
 "use client";
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import {
   User,
   Shield,
@@ -16,11 +16,52 @@ import Input from "@/components/ui/Input";
 import Select from "@/components/ui/Select";
 import ConfirmDialog from "@/components/ui/ConfirmDialog";
 import { sampleUser } from "@/data/sampleData";
+import { db, useNetworkStatus, UserSettings } from "@/lib/utils";
+import { useLiveQuery } from "dexie-react-hooks";
 
 const SettingsPage: React.FC = () => {
   const [activeSection, setActiveSection] = useState("account");
   const [showDeleteDialog, setShowDeleteDialog] = useState(false);
-  const [userSettings, setUserSettings] = useState(sampleUser);
+  const isOnline = useNetworkStatus();
+  const dbUserSettings =
+    useLiveQuery(() => db.userSettings.get("settings"), []) || null;
+  const [userSettings, setUserSettings] = useState<UserSettings>(() => {
+    if (dbUserSettings) {
+      return dbUserSettings;
+    } else {
+      // Default settings if not in DB
+      return {
+        id: "settings",
+        userId: sampleUser.id,
+        preferences: {
+          aiEnabled: sampleUser.preferences.aiEnabled,
+          autoBackup: sampleUser.preferences.autoBackup,
+          theme: sampleUser.preferences.theme,
+        },
+        syncStatus: "synced",
+      };
+    }
+  });
+
+  // Effect to update local state when dbUserSettings changes
+  useEffect(() => {
+    if (dbUserSettings) {
+      setUserSettings(dbUserSettings);
+    } else {
+      // If no settings exist, initialize and save default settings to DB
+      const defaultSettings: UserSettings = {
+        id: "settings",
+        userId: sampleUser.id,
+        preferences: {
+          aiEnabled: sampleUser.preferences.aiEnabled,
+          autoBackup: sampleUser.preferences.autoBackup,
+          theme: sampleUser.preferences.theme,
+        },
+        syncStatus: "synced",
+      };
+      db.userSettings.put(defaultSettings);
+    }
+  }, [dbUserSettings]);
 
   const sections = [
     { id: "account", label: "Account", icon: User },
@@ -34,6 +75,23 @@ const SettingsPage: React.FC = () => {
     { value: "dark", label: "Dark" },
     { value: "system", label: "System" },
   ];
+
+  const handleSaveSettings = async (updatedSettings: UserSettings) => {
+    const finalSettings = {
+      ...updatedSettings,
+      syncStatus: isOnline ? "synced" : "pending",
+    };
+    await db.userSettings.put(finalSettings);
+    if (!isOnline) {
+      await db.offline_changes.add({
+        type: "update",
+        collection: "userSettings",
+        data: finalSettings,
+        timestamp: Date.now(),
+      });
+    }
+    setUserSettings(finalSettings);
+  };
 
   const renderSection = () => {
     switch (activeSection) {
@@ -99,7 +157,17 @@ const SettingsPage: React.FC = () => {
             </div>
 
             <div className="pt-4 border-t border-neutral-200">
-              <Button>Save Changes</Button>
+              <Button
+                onClick={() =>
+                  handleSaveSettings({
+                    ...userSettings,
+                    name: userSettings.name,
+                    email: userSettings.email,
+                  })
+                }
+              >
+                Save Changes
+              </Button>
             </div>
           </div>
         );
@@ -126,16 +194,15 @@ const SettingsPage: React.FC = () => {
                       type="checkbox"
                       checked={userSettings.preferences.autoBackup}
                       onChange={(e) =>
-                        setUserSettings((prev) => ({
-                          ...prev,
+                        handleSaveSettings({
+                          ...userSettings,
                           preferences: {
-                            ...prev.preferences,
+                            ...userSettings.preferences,
                             autoBackup: e.target.checked,
                           },
-                        }))
+                        })
                       }
                       className="sr-only peer"
-                      disabled
                     />
                     <div className="w-11 h-6 bg-neutral-200 peer-focus:outline-none peer-focus:ring-4 peer-focus:ring-primary-300 rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-neutral-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-primary-600"></div>
                   </label>
@@ -158,10 +225,13 @@ const SettingsPage: React.FC = () => {
                   options={themeOptions}
                   value={userSettings.preferences.theme}
                   onChange={(value) =>
-                    setUserSettings((prev) => ({
-                      ...prev,
-                      preferences: { ...prev.preferences, theme: value as any },
-                    }))
+                    handleSaveSettings({
+                      ...userSettings,
+                      preferences: {
+                        ...userSettings.preferences,
+                        theme: value as any,
+                      },
+                    })
                   }
                 />
 
@@ -236,7 +306,7 @@ const SettingsPage: React.FC = () => {
   };
 
   return (
-    <div className="min-h-screen bg-neutral-50">
+    <div className="min-h-fit bg-neutral-50">
       <div className="flex">
         <main className="flex">
           <div className="p-6 max-w-6xl mx-auto">

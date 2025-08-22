@@ -10,6 +10,8 @@ import { Memory } from "@/types/types";
 import { sampleMemories } from "@/data/sampleData";
 import DatePicker from "@/components/ui/DatePicker";
 import MultiSelect from "@/components/ui/MultiSelect";
+import { db } from "@/lib/utils";
+import { useLiveQuery } from "dexie-react-hooks";
 
 interface SearchPageProps {
   onMemoryClick: (memory: Memory) => void;
@@ -45,6 +47,7 @@ const SearchPage: React.FC<SearchPageProps> = ({
     "friends",
     "celebrations",
   ]);
+  const allMemories = useLiveQuery(() => db.memories.toArray(), []) || [];
 
   useEffect(() => {
     if (searchQuery.trim()) {
@@ -70,10 +73,10 @@ const SearchPage: React.FC<SearchPageProps> = ({
       setSearchResults([]);
       setIsSearching(false);
     }
-  }, [searchQuery]);
+  }, [searchQuery, allMemories]);
 
   const filteredMemories = React.useMemo(() => {
-    const dataToFilter = searchQuery.trim() ? searchResults : sampleMemories;
+    const dataToFilter = searchQuery.trim() ? searchResults : allMemories;
     return dataToFilter.filter((memory) => {
       const memoryDate = new Date(memory.date);
       const matchesDateRange =
@@ -100,10 +103,10 @@ const SearchPage: React.FC<SearchPageProps> = ({
   console.log("FIltered", filteredMemories);
 
   const availableTags = Array.from(
-    new Set(sampleMemories.flatMap((mem) => mem.tags))
+    new Set(allMemories.flatMap((mem) => mem.tags))
   );
   const availableMoods = Array.from(
-    new Set(sampleMemories.map((mem) => mem.mood).filter(Boolean))
+    new Set(allMemories.map((mem) => mem.mood).filter(Boolean))
   ) as string[];
 
   const groupedResults = {
@@ -115,7 +118,7 @@ const SearchPage: React.FC<SearchPageProps> = ({
   };
 
   return (
-    <div className="min-h-screen bg-neutral-50">
+    <div className="min-h-fit bg-neutral-50">
       <div className="">
         <main className="flex">
           <div className="p-6 ">
@@ -253,9 +256,11 @@ const SearchPage: React.FC<SearchPageProps> = ({
                           onClick={() => {
                             onMemoryClick(memory);
                           }}
-                          onEdit={() => onEditMemory(memory)} // Pass onEditMemory
-                          onDelete={() => onDeleteMemory(memory.id)} // Pass onDeleteMemory
-                          onShareMemory={() => onShareMemory(memory)} // Pass onShareMemory
+                          onEdit={() => onEditMemory(memory)}
+                          onDelete={() => onDeleteMemory(memory.id)}
+                          onShareMemory={() => {
+                            console.log("sdsd"), onShareMemory(memory);
+                          }}
                         />
                       ))}
                     </div>

@@ -176,13 +176,13 @@ const Timeline: React.FC<TimelineProps> = ({
                                               }}
                                               onEdit={() =>
                                                 onEditMemory(memory)
-                                              } // Pass onEditMemory
+                                              }
                                               onDelete={() =>
                                                 onDeleteMemory(memory.id)
-                                              } // Pass onDeleteMemory
+                                              }
                                               onShareMemory={() =>
                                                 onShareMemory(memory)
-                                              } // Pass onShareMemory
+                                              }
                                             />
                                           ))}
                                       </div>

@@ -1,5 +1,12 @@
 import React, { useState, useEffect } from "react";
-import { Upload, Calendar, MapPin, Heart, Tag as TagIcon } from "lucide-react";
+import {
+  Upload,
+  Calendar,
+  MapPin,
+  Heart,
+  Tag as TagIcon,
+  Loader,
+} from "lucide-react";
 import Modal from "./ui/Modal";
 import Button from "./ui/Button";
 import Input from "./ui/Input";
@@ -47,6 +54,9 @@ const CreateMemoryModal: React.FC<CreateMemoryModalProps> = ({
     mood?: string;
     location?: string; // Add location to formErrors
   }>({});
+  const [aiLoading, setAiLoading] = useState(false); // New state for AI loading
+  const [aiGeneratedContent, setAiGeneratedContent] = useState(""); // New state for AI generated content
+  const [showAiButtons, setShowAiButtons] = useState(false); // New state to control visibility of AI buttons
 
   // Effect to update form data when editingMemory prop changes
   useEffect(() => {
@@ -82,6 +92,7 @@ const CreateMemoryModal: React.FC<CreateMemoryModalProps> = ({
       });
       setActiveTab("content"); // Reset to content tab
     }
+    setAiGeneratedContent(""); // Clear AI generated content on modal open/edit
   }, [editingMemory, isOpen]); // Depend on editingMemory and isOpen
 
   // Function to simulate file upload to a server-side 'files' directory
@@ -143,6 +154,7 @@ const CreateMemoryModal: React.FC<CreateMemoryModalProps> = ({
     { id: "metadata", label: "Details", icon: TagIcon },
   ];
 
+  // for creating and editing if offline
   const handleSave = async () => {
     const errors: { title?: string; mood?: string; location?: string } = {};
     if (!formData.title.trim()) {
@@ -215,6 +227,28 @@ const CreateMemoryModal: React.FC<CreateMemoryModalProps> = ({
     }
   };
 
+  const handleGenerateWithAI = async () => {
+    if (!formData.title.trim() && !formData.content.trim()) {
+      return; // Only generate if title or content exists
+    }
+    setAiLoading(true);
+
+    // Simulate AI API call
+    await new Promise((resolve) => setTimeout(resolve, 1500));
+
+    const generatedContent = `AI-generated content for: ${
+      formData.title.trim() || formData.content.trim()
+    }. This is a placeholder for structured and generated text.`;
+
+    setFormData((prev) => ({
+      ...prev,
+      content: generatedContent,
+    }));
+    setAiGeneratedContent(generatedContent); // Store for potential "Accept" action later
+    setAiLoading(false);
+    setShowAiButtons(true); // Show accept/discard buttons after generation
+  };
+
   const removeTag = (tagToRemove: string) => {
     setFormData({
       ...formData,
@@ -282,6 +316,56 @@ const CreateMemoryModal: React.FC<CreateMemoryModalProps> = ({
                 className="w-full px-3 py-2 border border-neutral-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-transparent"
               />
             </div>
+            {showAiButtons && (
+              <div className="flex space-x-2 mt-2">
+                <Button
+                  onClick={() => {
+                    setFormData((prev) => ({
+                      ...prev,
+                      content: aiGeneratedContent,
+                    }));
+                    setShowAiButtons(false);
+                    setAiGeneratedContent("");
+                  }}
+                  variant="primary"
+                  className="flex-1"
+                >
+                  Use AI Content
+                </Button>
+                <Button
+                  onClick={() => {
+                    setFormData((prev) => ({
+                      ...prev,
+                      content: editingMemory?.content || "", // Revert to original content or empty
+                    }));
+                    setShowAiButtons(false);
+                    setAiGeneratedContent("");
+                  }}
+                  variant="secondary"
+                  className="flex-1"
+                >
+                  Discard
+                </Button>
+              </div>
+            )}
+            {(formData.title.trim() || formData.content.trim()) &&
+              !showAiButtons && (
+                <Button
+                  onClick={handleGenerateWithAI}
+                  disabled={aiLoading}
+                  variant="secondary"
+                  className="w-full"
+                >
+                  {aiLoading ? (
+                    <span className="flex items-center">
+                      <Loader className="w-4 h-4 mr-2 animate-spin" />
+                      Generating...
+                    </span>
+                  ) : (
+                    "Generate content with AI"
+                  )}
+                </Button>
+              )}
           </div>
         )}
 

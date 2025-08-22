@@ -197,7 +197,6 @@
     --color-success-50: #f0fdf4;
     --color-success-100: #dcfce7;
     --color-success-200: #bbf7d0;
-    --color-success-500: #22c55e;
     --color-success-600: #16a34a;
     --color-success-700: #15803d;
     --color-success-800: #166534;
@@ -423,9 +422,6 @@
   .-top-24 {
     top: calc(var(--spacing) * -24);
   }
-  .top-0 {
-    top: calc(var(--spacing) * 0);
-  }
   .top-1\/2 {
     top: calc(1/2 * 100%);
   }
@@ -588,6 +584,9 @@
   .inline-flex {
     display: inline-flex;
   }
+  .table {
+    display: table;
+  }
   .aspect-square {
     aspect-ratio: 1 / 1;
   }
@@ -639,6 +638,9 @@
   .h-full {
     height: 100%;
   }
+  .max-h-32 {
+    max-height: calc(var(--spacing) * 32);
+  }
   .max-h-60 {
     max-height: calc(var(--spacing) * 60);
   }
@@ -653,6 +655,10 @@
   }
   .min-h-\[2\.5rem\] {
     min-height: 2.5rem;
+  }
+  .min-h-fit {
+    min-height: -moz-fit-content;
+    min-height: fit-content;
   }
   .min-h-full {
     min-height: 100%;
@@ -1211,9 +1217,6 @@
   .bg-success-100 {
     background-color: var(--color-success-100);
   }
-  .bg-success-500 {
-    background-color: var(--color-success-500);
-  }
   .bg-success-600 {
     background-color: var(--color-success-600);
   }
@@ -1303,6 +1306,9 @@
     -webkit-background-clip: text;
             background-clip: text;
   }
+  .fill-red-600 {
+    fill: var(--color-red-600);
+  }
   .object-contain {
     -o-object-fit: contain;
        object-fit: contain;
@@ -1328,6 +1334,9 @@
   }
   .p-8 {
     padding: calc(var(--spacing) * 8);
+  }
+  .p-9 {
+    padding: calc(var(--spacing) * 9);
   }
   .px-1 {
     padding-inline: calc(var(--spacing) * 1);
@@ -1729,6 +1738,13 @@
     --tw-outline-style: none;
     outline-style: none;
   }
+  .group-hover\:opacity-100 {
+    &:is(:where(.group):hover *) {
+      @media (hover: hover) {
+        opacity: 100%;
+      }
+    }
+  }
   .peer-checked\:bg-primary-600 {
     &:is(:where(.peer):checked ~ *) {
       background-color: var(--color-primary-600);
@@ -2016,6 +2032,13 @@
       @media (hover: hover) {
         --tw-gradient-to: var(--color-secondary-700);
         --tw-gradient-stops: var(--tw-gradient-via-stops, var(--tw-gradient-position), var(--tw-gradient-from) var(--tw-gradient-from-position), var(--tw-gradient-to) var(--tw-gradient-to-position));
+      }
+    }
+  }
+  .hover\:text-destructive-600 {
+    &:hover {
+      @media (hover: hover) {
+        color: var(--color-destructive-600);
       }
     }
   }

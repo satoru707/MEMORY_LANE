@@ -99,7 +99,7 @@ const PrivacySettingsPage: React.FC = () => {
   };
 
   return (
-    <div className="min-h-screen bg-neutral-50">
+    <div className="min-h-fit bg-neutral-50">
       <div className="flex">
         <main className="flex">
           <div className="p-6 max-w-4xl mx-auto">

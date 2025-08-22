@@ -16,10 +16,11 @@ import ProfilePage from "@/pages/ProfilePage";
 import PrivacySettingsPage from "@/pages/PrivacySettingPage";
 import OfflineBanner from "@/components/ui/OfflineBanner";
 import NotificationToast from "@/components/ui/NotificationToast";
-import { sampleMemories } from "@/data/sampleData";
+import { notification, sampleMemories } from "@/data/sampleData";
 import { Memory } from "@/types/types";
 import { useNetworkStatus, db } from "@/lib/utils";
 import { useLiveQuery } from "dexie-react-hooks";
+import { Comment, Like, UserSettings } from "@/lib/utils";
 
 function App() {
   const [currentPage, setCurrentPage] = useState("timeline");
@@ -33,35 +34,7 @@ function App() {
   );
   const memories = useLiveQuery(() => db.memories.toArray(), []) || [];
   const [showNotifications, setShowNotifications] = useState(false);
-  const [notifications, setNotifications] = useState([
-    {
-      id: "notif-1",
-      type: "memory_shared" as const,
-      title: "Mom shared a memory",
-      message:
-        "Family Thanksgiving Dinner - What an amazing Thanksgiving we had this year!",
-      timestamp: new Date(Date.now() - 2 * 60 * 60 * 1000).toISOString(),
-      read: false,
-      avatar:
-        "https://images.pexels.com/photos/1239291/pexels-photo-1239291.jpeg?auto=compress&cs=tinysrgb&w=150",
-    },
-    {
-      id: "notif-2",
-      type: "comment" as const,
-      title: "Dad commented on your memory",
-      message: "Great photo! I remember that day so well.",
-      timestamp: new Date(Date.now() - 4 * 60 * 60 * 1000).toISOString(),
-      read: false,
-    },
-    {
-      id: "notif-3",
-      type: "family_invite" as const,
-      title: "Family invitation sent",
-      message: "Your invitation to Emma was sent successfully.",
-      timestamp: new Date(Date.now() - 24 * 60 * 60 * 1000).toISOString(),
-      read: true,
-    },
-  ]);
+  const [notifications, setNotifications] = useState(notification);
 
   useEffect(() => {
     const loadInitialMemories = async () => {
@@ -98,7 +71,6 @@ function App() {
 
     for (const change of changes) {
       try {
-        // Simulate API call
         console.log(
           `Syncing ${change.type} for ${change.collection} with data:`,
           change.data
@@ -106,13 +78,40 @@ function App() {
         // In a real app, make your actual API call here based on change.type (add/update/delete)
         // Example: await fetch('/api/memories', { method: 'POST', body: JSON.stringify(change.data) });
 
-        // On successful sync, update memory status and remove from offline_changes
-        const syncedMemory = { ...change.data, syncStatus: "synced" } as Memory;
-        await db.memories.put(syncedMemory);
-        await db.offline_changes.delete(change.id!);
+        let syncedData: any;
+
+        switch (change.collection) {
+          case "memories":
+            syncedData = { ...change.data, syncStatus: "synced" } as Memory;
+            await db.memories.put(syncedData);
+            break;
+          case "likes":
+            syncedData = { ...change.data, syncStatus: "synced" } as Like;
+            await db.likes.put(syncedData);
+            break;
+          case "comments":
+            syncedData = { ...change.data, syncStatus: "synced" } as Comment;
+            await db.comments.put(syncedData);
+            break;
+          case "userSettings":
+            syncedData = {
+              ...change.data,
+              syncStatus: "synced",
+            } as UserSettings;
+            await db.userSettings.put(syncedData);
+            break;
+          default:
+            console.warn(
+              "Unknown collection type for sync:",
+              change.collection
+            );
+            continue; // Skip this change and go to the next
+        }
+
+        await db.offline_changes.delete(change.id!); // Remove from offline_changes after successful sync
         console.log(
           "Successfully synced and updated local database:",
-          syncedMemory
+          syncedData
         );
       } catch (error) {
         console.error("Error syncing offline change:", change, error);
@@ -142,9 +141,17 @@ function App() {
   };
 
   const handleDeleteMemory = async (memoryId: string) => {
+    const result = window.confirm(
+      "Are you sure you want to delete this memory?"
+    );
+    if (!result) return;
     console.log("Attempting to delete memory:", memoryId);
-    // Assume successful delete from backend for now
-    // In a real app, you'd make an API call here, e.g., await deleteMemoryFromBackend(memoryId);
+
+    const memoryToDelete = memories.find((mem) => mem.id === memoryId);
+    if (!memoryToDelete) {
+      console.error("Memory not found for deletion:", memoryId);
+      return;
+    }
 
     if (isOnline) {
       console.log("Simulating backend delete for memory:", memoryId);
@@ -154,7 +161,7 @@ function App() {
       await db.offline_changes.add({
         type: "delete",
         collection: "memories",
-        data: { id: memoryId } as Memory, // Only need ID for delete
+        data: { ...memoryToDelete, syncStatus: "pending" } as Memory, // Include full memory data and pending status for delete
         timestamp: Date.now(),
       });
     }
@@ -163,10 +170,16 @@ function App() {
 
   const handleShareMemory = async (memory: Memory) => {
     console.log("Attempting to toggle share status for memory:", memory.id);
-    const updatedMemory = {
+    console.log(memory);
+
+    let updatedMemory = {
       ...memory,
       isPublic: !memory.isPublic,
       updatedAt: new Date().toISOString(),
+      syncStatus: (isOnline ? "synced" : "pending") as
+        | "synced"
+        | "pending"
+        | "offline", // Explicitly cast to literal type
     }; // Toggle isPublic
 
     if (isOnline) {
@@ -239,7 +252,7 @@ function App() {
         {/* Main Content */}
         <main className="flex-1 lg:ml-64">
           {currentPage === "timeline" && (
-            <div className="min-h-screen bg-neutral-50">
+            <div className="min-h-fit bg-neutral-50">
               <div className="p-6">
                 <div className="space-y-6">
                   <div className="flex items-center justify-between">
@@ -256,9 +269,9 @@ function App() {
                   <Timeline
                     memories={memories}
                     onMemoryClick={handleMemoryClick}
-                    onEditMemory={handleEditMemory} // Pass handleEditMemory
-                    onDeleteMemory={handleDeleteMemory} // Pass handleDeleteMemory
-                    onShareMemory={handleShareMemory} // Pass handleShareMemory
+                    onEditMemory={handleEditMemory}
+                    onDeleteMemory={handleDeleteMemory}
+                    onShareMemory={handleShareMemory}
                   />
                 </div>
               </div>
