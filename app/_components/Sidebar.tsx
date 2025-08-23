@@ -8,12 +8,10 @@ import {
   Settings,
   TrendingUp,
   Shield,
-  User,
   Users,
 } from "lucide-react";
 import { cn } from "@/lib/utils";
-import Button from "./ui/Button";
-import { analytics, sampleMemories, sampleUser } from "@/data/sampleData";
+import { analytics, sampleUser } from "@/data/sampleData";
 
 interface SidebarProps {
   isOpen: boolean;
@@ -67,7 +65,8 @@ const Sidebar: React.FC<SidebarProps> = ({
                 <button
                   key={item.id}
                   onClick={() => {
-                    onNavigate(item.id), onClick();
+                    onNavigate(item.id);
+                    onClick();
                   }}
                   className={cn(
                     "w-full flex items-center space-x-3 px-3 py-2 rounded-lg text-sm font-medium transition-colors",

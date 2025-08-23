@@ -16,6 +16,7 @@ import DatePicker from "@/components/ui/DatePicker";
 import Modal from "@/components/ui/Modal";
 import MultiSelect from "@/components/ui/MultiSelect";
 import { Comment, Like } from "@/lib/utils";
+import Image from "next/image";
 
 interface FamilyMember {
   id: string;
@@ -61,7 +62,6 @@ const FamilyTimelinePage: React.FC = () => {
       () => db.memories.where({ userId: "user-sarah" }).toArray(),
       []
     ) || [];
-  const allDexieMemories = useLiveQuery(() => db.memories.toArray(), []) || [];
   const allLikes = useLiveQuery(() => db.likes.toArray(), []) || [];
   const allComments = useLiveQuery(() => db.comments.toArray(), []) || [];
 
@@ -153,7 +153,7 @@ const FamilyTimelinePage: React.FC = () => {
     return [...currentUserPublicMemories, ...otherFamilyMemories].sort(
       (a, b) => new Date(b.date).getTime() - new Date(a.date).getTime()
     );
-  }, [currentUserMemories, familyMemories, allLikes, allComments]);
+  }, [currentUserMemories, allLikes, allComments]);
 
   const filteredMemories = combinedFamilyTimelineMemories.filter((memory) => {
     const matchesMember =
@@ -214,8 +214,8 @@ const FamilyTimelinePage: React.FC = () => {
   };
 
   const handleReaction = async (
-    memoryId: string,
-    type: "heart" | "smile" | "wow"
+    memoryId: string
+    // type: "heart" | "smile" | "wow"
   ) => {
     // Check if user has already liked this memory
     const existingLike = allLikes.find(
@@ -417,7 +417,7 @@ const FamilyTimelinePage: React.FC = () => {
                     }`}
                   >
                     {member.avatar ? (
-                      <img
+                      <Image
                         src={member.avatar}
                         alt={member.name}
                         className="w-5 h-5 rounded-full"
@@ -440,17 +440,12 @@ const FamilyTimelinePage: React.FC = () => {
           <div className="space-y-6">
             {filteredMemories.length > 0 ? (
               filteredMemories.map((memory) => {
-                // Check if current user has liked this memory
-                const hasLiked = memory.reactions.some(
-                  (reaction) => reaction.author.id === sampleUser.id
-                );
-
                 return (
                   <Card key={memory.id} className="space-y-4">
                     {/* Shared By Header */}
                     <div className="flex items-center space-x-3 pb-3 border-b border-neutral-200">
                       {memory.sharedBy.avatar ? (
-                        <img
+                        <Image
                           src={memory.sharedBy.avatar}
                           alt={memory.sharedBy.name}
                           className="w-10 h-10 rounded-full"
@@ -498,7 +493,7 @@ const FamilyTimelinePage: React.FC = () => {
                       {/* Image */}
                       {memory.images && memory.images.length > 0 && (
                         <div className="aspect-video bg-neutral-100 rounded-lg overflow-hidden">
-                          <img
+                          <Image
                             src={memory.images[0]}
                             alt={memory.title}
                             className="w-full h-full object-cover"
@@ -535,7 +530,7 @@ const FamilyTimelinePage: React.FC = () => {
                       <div className="flex items-center justify-between">
                         <div className="flex items-center space-x-4">
                           <button
-                            onClick={() => handleReaction(memory.id, "heart")}
+                            onClick={() => handleReaction(memory.id)}
                             className={`flex items-center space-x-1 text-sm transition-colors ${
                               memory.isLikedByCurrentUser
                                 ? "text-red-600"
@@ -574,7 +569,7 @@ const FamilyTimelinePage: React.FC = () => {
                                 className="flex items-center"
                               >
                                 {reaction.author.avatar ? (
-                                  <img
+                                  <Image
                                     src={reaction.author.avatar}
                                     alt={reaction.author.name}
                                     className="w-6 h-6 rounded-full border-2 border-white"
@@ -608,7 +603,7 @@ const FamilyTimelinePage: React.FC = () => {
                               className="flex items-start space-x-3 group relative"
                             >
                               {comment.author.avatar ? (
-                                <img
+                                <Image
                                   src={comment.author.avatar}
                                   alt={comment.author.name}
                                   className="w-8 h-8 rounded-full"

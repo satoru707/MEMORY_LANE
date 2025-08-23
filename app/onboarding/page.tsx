@@ -14,7 +14,6 @@ import {
 import Button from "@/components/ui/Button";
 import Card from "@/components/ui/Card";
 import { cn } from "@/lib/utils";
-import type { Metadata } from "next";
 
 const OnboardingFlow: React.FC = () => {
   const router = useRouter();
@@ -94,8 +93,8 @@ const OnboardingFlow: React.FC = () => {
                 Welcome to Memory Lane
               </h1>
               <p className="text-lg text-neutral-600 max-w-md mx-auto">
-                Let's set up your personal timeline to start capturing and
-                preserving your life's most precious moments.
+                Let&apos;s set up your personal timeline to start capturing and
+                preserving your life&apos;s most precious moments.
               </p>
             </div>
           </div>

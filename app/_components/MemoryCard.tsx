@@ -11,8 +11,7 @@ import {
   Share,
   Download,
 } from "lucide-react";
-import CreateMemoryModal from "./CreateMemoryModal";
-import { useNetworkStatus } from "@/lib/utils";
+import Image from "next/image";
 import { Memory } from "@/types/types";
 import Card from "./ui/Card";
 import Tag from "./ui/Tag";
@@ -35,7 +34,6 @@ const MemoryCard: React.FC<MemoryCardProps> = ({
   onShareMemory,
 }) => {
   const [showMenu, setShowMenu] = useState(false);
-  const isOnline = useNetworkStatus();
   const menuRef = useRef<HTMLDivElement>(null);
   const moodColors = {
     joyful: "bg-yellow-100 text-yellow-800 border-yellow-200",
@@ -176,7 +174,7 @@ const MemoryCard: React.FC<MemoryCardProps> = ({
         {/* Image Thumbnail */}
         {memory.images && memory.images.length > 0 && (
           <div className="aspect-video bg-neutral-100 rounded-lg overflow-hidden">
-            <img
+            <Image
               src={memory.images[0]}
               alt={memory.title}
               className="w-full h-full object-cover"

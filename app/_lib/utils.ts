@@ -35,7 +35,7 @@ export interface OfflineChange {
   id?: number;
   type: "add" | "update" | "delete";
   collection: string;
-  data: any; // Changed from Memory to any to support various data types
+  data: Memory | Like | Comment | UserSettings;
   timestamp: number;
 }
 

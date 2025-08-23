@@ -12,6 +12,7 @@ import {
 import Button from "@/components/ui/Button";
 import Card from "@/components/ui/Card";
 import "./global.css";
+import Image from "next/image";
 
 const LandingPage: React.FC = () => {
   const features = [
@@ -92,7 +93,7 @@ const LandingPage: React.FC = () => {
                 New • AI-powered memory keeping
               </div>
               <h1 className="text-4xl sm:text-5xl lg:text-6xl font-display font-bold text-neutral-900 leading-tight">
-                Your Life's Story,
+                Your Life&apos;s Story,
                 <br />
                 <span className="bg-gradient-to-r from-primary-600 to-secondary-600 bg-clip-text text-transparent">
                   Beautifully Preserved
@@ -125,7 +126,7 @@ const LandingPage: React.FC = () => {
             </div>
 
             <div className="mt-12">
-              <img
+              <Image
                 src="https://images.pexels.com/photos/267350/pexels-photo-267350.jpeg?auto=compress&cs=tinysrgb&w=1200"
                 alt="Memory Lane App Screenshot"
                 className="w-full max-w-4xl mx-auto rounded-2xl shadow-2xl border border-neutral-200"
@@ -309,7 +310,7 @@ const LandingPage: React.FC = () => {
                 </span>
               </div>
               <p className="text-neutral-400">
-                Preserving life's precious moments with the power of AI.
+                Preserving life&apos;s precious moments with the power of AI.
               </p>
             </div>
 

@@ -217,7 +217,7 @@ const TagsPage: React.FC<TagPageProps> = ({
                     No memories found
                   </h3>
                   <p className="text-neutral-600">
-                    No memories are tagged with "{selectedTag}" yet.
+                    No memories are tagged with &quot;{selectedTag}&quot; yet.
                   </p>
                 </Card>
               )}

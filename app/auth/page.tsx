@@ -1,7 +1,7 @@
 "use client";
 import React, { useState } from "react";
 import NextLink from "next/link";
-import { Mail, Lock, ArrowRight, Github, Chrome, Link } from "lucide-react";
+import { Mail, ArrowRight, Github, Chrome } from "lucide-react";
 import Button from "@/components/ui/Button";
 import Input from "@/components/ui/Input";
 import Card from "@/components/ui/Card";
@@ -60,7 +60,7 @@ const AuthPage: React.FC<AuthPageProps> = ({ type, onSubmit }) => {
             </p>
           </div>
           <div className="text-sm text-neutral-500">
-            Didn't receive the email? Check your spam folder or{" "}
+            Didn&apos;t receive the email? Check your spam folder or{" "}
             <button
               onClick={() => setEmailSent(false)}
               className="text-primary-600 hover:text-primary-700 font-medium"
@@ -164,7 +164,7 @@ const AuthPage: React.FC<AuthPageProps> = ({ type, onSubmit }) => {
                 </NextLink>
               </div>
               <div className="text-neutral-500">
-                Don't have an account?
+                Don&apos;t have an account?
                 <NextLink
                   className="text-primary-600 hover:text-primary-700 font-medium"
                   href={"/auth/register"}

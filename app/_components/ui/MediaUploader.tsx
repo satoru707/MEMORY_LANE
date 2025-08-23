@@ -1,6 +1,7 @@
 import React, { useState, useRef } from "react";
-import { Upload, X, Image, File, AlertCircle } from "lucide-react";
-import { cn } from "../../_lib/utils";
+import { Upload, X, File, AlertCircle } from "lucide-react";
+import { cn } from "@/lib/utils";
+import Image from "next/image";
 import Button from "./Button";
 import Loader from "./Loader";
 
@@ -109,6 +110,7 @@ const MediaUploader: React.FC<MediaUploaderProps> = ({
           ...files,
           ...fileObjects.map((f) => ({ ...f, error: "Upload failed" })),
         ]);
+        console.error("Upload failed", error);
       } finally {
         setUploading(false);
       }
@@ -179,7 +181,7 @@ const MediaUploader: React.FC<MediaUploaderProps> = ({
               <div className="flex-shrink-0">
                 {file.type.startsWith("image/") ? (
                   <div className="w-10 h-10 bg-neutral-200 rounded overflow-hidden">
-                    <img
+                    <Image
                       src={file.url}
                       alt={file.name}
                       className="w-full h-full object-cover"

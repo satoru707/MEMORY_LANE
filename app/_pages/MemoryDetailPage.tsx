@@ -17,6 +17,7 @@ import Modal from "@/components/ui/Modal";
 import { Memory } from "@/types/types";
 import { db } from "@/lib/utils";
 import { useLiveQuery } from "dexie-react-hooks";
+import Image from "next/image";
 
 interface MemoryDetailPageProps {
   memoryId: string;
@@ -154,7 +155,7 @@ const MemoryDetailPage: React.FC<MemoryDetailPageProps> = ({
                     className="aspect-video bg-neutral-100 rounded-lg overflow-hidden cursor-pointer"
                     onClick={() => openLightbox(0)}
                   >
-                    <img
+                    <Image
                       src={memory.images[0]}
                       alt={memory.title}
                       className="w-full h-full object-cover hover:scale-105 transition-transform duration-200"
@@ -168,7 +169,7 @@ const MemoryDetailPage: React.FC<MemoryDetailPageProps> = ({
                         className="aspect-square bg-neutral-100 rounded-lg overflow-hidden cursor-pointer"
                         onClick={() => openLightbox(index)}
                       >
-                        <img
+                        <Image
                           src={image}
                           alt={`${memory.title} ${index + 1}`}
                           className="w-full h-full object-cover hover:scale-105 transition-transform duration-200"
@@ -281,7 +282,7 @@ const MemoryDetailPage: React.FC<MemoryDetailPageProps> = ({
       >
         <div className="relative">
           {memory.images && (
-            <img
+            <Image
               src={memory.images[currentImageIndex]}
               alt={`${memory.title} ${currentImageIndex + 1}`}
               className="w-full h-auto max-h-screen object-contain"

@@ -49,7 +49,7 @@ const MemoryShareModal: React.FC<MemoryShareModalProps> = ({
       setLinkCopied(true);
       setTimeout(() => setLinkCopied(false), 2000);
     } catch (err) {
-      console.error("Failed to copy link");
+      console.error("Failed to copy link", err);
     }
   };
 
@@ -92,7 +92,9 @@ const MemoryShareModal: React.FC<MemoryShareModalProps> = ({
               return (
                 <button
                   key={method.id}
-                  onClick={() => setShareMethod(method.id as any)}
+                  onClick={() =>
+                    setShareMethod(method.id as "family" | "email" | "link")
+                  }
                   className={`py-2 px-1 border-b-2 font-medium text-sm flex items-center space-x-2 ${
                     shareMethod === method.id
                       ? "border-primary-500 text-primary-600"

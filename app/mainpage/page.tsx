@@ -78,27 +78,34 @@ function App() {
         // In a real app, make your actual API call here based on change.type (add/update/delete)
         // Example: await fetch('/api/memories', { method: 'POST', body: JSON.stringify(change.data) });
 
-        let syncedData: any;
-
         switch (change.collection) {
           case "memories":
-            syncedData = { ...change.data, syncStatus: "synced" } as Memory;
-            await db.memories.put(syncedData);
+            const syncedMemory: Memory = {
+              ...(change.data as Memory),
+              syncStatus: "synced",
+            };
+            await db.memories.put(syncedMemory);
             break;
           case "likes":
-            syncedData = { ...change.data, syncStatus: "synced" } as Like;
-            await db.likes.put(syncedData);
+            const syncedLike: Like = {
+              ...(change.data as Like),
+              syncStatus: "synced",
+            };
+            await db.likes.put(syncedLike);
             break;
           case "comments":
-            syncedData = { ...change.data, syncStatus: "synced" } as Comment;
-            await db.comments.put(syncedData);
+            const syncedComment: Comment = {
+              ...(change.data as Comment),
+              syncStatus: "synced",
+            };
+            await db.comments.put(syncedComment);
             break;
           case "userSettings":
-            syncedData = {
-              ...change.data,
+            const syncedUserSettings: UserSettings = {
+              ...(change.data as UserSettings),
               syncStatus: "synced",
-            } as UserSettings;
-            await db.userSettings.put(syncedData);
+            };
+            await db.userSettings.put(syncedUserSettings);
             break;
           default:
             console.warn(
@@ -109,10 +116,6 @@ function App() {
         }
 
         await db.offline_changes.delete(change.id!); // Remove from offline_changes after successful sync
-        console.log(
-          "Successfully synced and updated local database:",
-          syncedData
-        );
       } catch (error) {
         console.error("Error syncing offline change:", change, error);
         // Handle errors: maybe retry later, or notify user
@@ -123,6 +126,8 @@ function App() {
   const handleCreateMemory = (newMemory: Partial<Memory>) => {
     // No need to setMemories directly here, useLiveQuery will handle it
     // The CreateMemoryModal already saves to db.memories
+    // if err it's here
+    db.memories.add(newMemory as Memory);
   };
 
   const handleMemoryClick = (memory: Memory) => {
@@ -169,10 +174,7 @@ function App() {
   };
 
   const handleShareMemory = async (memory: Memory) => {
-    console.log("Attempting to toggle share status for memory:", memory.id);
-    console.log(memory);
-
-    let updatedMemory = {
+    const updatedMemory = {
       ...memory,
       isPublic: !memory.isPublic,
       updatedAt: new Date().toISOString(),

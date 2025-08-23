@@ -1,6 +1,6 @@
 "use client";
 import React, { useState } from "react";
-import { ChevronDown, ChevronRight, Filter, Search } from "lucide-react";
+import { ChevronDown, ChevronRight } from "lucide-react";
 import { Memory } from "@/types/types";
 import MemoryCard from "./MemoryCard";
 import Button from "./ui/Button";

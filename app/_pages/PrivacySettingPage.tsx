@@ -1,21 +1,12 @@
 "use client";
 import React, { useState } from "react";
-import {
-  Shield,
-  Users,
-  Eye,
-  EyeOff,
-  Share,
-  Lock,
-  Globe,
-  UserPlus,
-} from "lucide-react";
+import { Shield, Users, Eye, Lock, UserPlus } from "lucide-react";
 import Card from "@/components/ui/Card";
 import Button from "@/components/ui/Button";
 import Input from "@/components/ui/Input";
 import Select from "@/components/ui/Select";
 import ConfirmDialog from "@/components/ui/ConfirmDialog";
-import { sampleUser } from "@/data/sampleData";
+import Image from "next/image";
 
 interface FamilyMember {
   id: string;
@@ -80,18 +71,6 @@ const PrivacySettingsPage: React.FC = () => {
     }
   };
 
-  const updateMemberPermissions = (memberId: string) => {
-    setFamilyMembers((members) =>
-      members.map((member) =>
-        member.id === memberId
-          ? {
-              ...member,
-            }
-          : member
-      )
-    );
-  };
-
   const removeMember = (memberId: string) => {
     setFamilyMembers((members) =>
       members.filter((member) => member.id !== memberId)
@@ -109,7 +88,7 @@ const PrivacySettingsPage: React.FC = () => {
                   Privacy & Sharing
                 </h1>
                 <p className="text-neutral-600 mt-1">
-                  Control who can see your memories and how they're shared
+                  Control who can see your memories and how they&apos;re shared
                 </p>
               </div>
 
@@ -242,7 +221,7 @@ const PrivacySettingsPage: React.FC = () => {
                         >
                           <div className="w-12 h-12 bg-neutral-200 rounded-full overflow-hidden flex-shrink-0">
                             {member.avatar ? (
-                              <img
+                              <Image
                                 src={member.avatar}
                                 alt={member.name}
                                 className="w-full h-full object-cover"
@@ -386,8 +365,8 @@ const PrivacySettingsPage: React.FC = () => {
           />
           <div className="bg-primary-50 border border-primary-200 rounded-lg p-3">
             <p className="text-sm text-primary-800">
-              They'll receive an email invitation to join your family timeline
-              and can view memories you choose to share.
+              They&apos;ll receive an email invitation to join your family
+              timeline and can view memories you choose to share.
             </p>
           </div>
         </div>

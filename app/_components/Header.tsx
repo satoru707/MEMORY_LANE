@@ -1,8 +1,7 @@
 "use client";
 import React, { useState } from "react";
-import { Search, Plus, Cloud, CloudOff, Menu, Bell, User } from "lucide-react";
+import { Plus, Cloud, CloudOff, Menu, Bell, User } from "lucide-react";
 import Button from "./ui/Button";
-import Input from "./ui/Input";
 import { cn } from "@/lib/utils";
 
 interface HeaderProps {
@@ -22,8 +21,6 @@ const Header: React.FC<HeaderProps> = ({
   notificationCount = 0,
   className,
 }) => {
-  const [showSearch, setShowSearch] = useState(false);
-
   const syncIcons = {
     online: Cloud,
     offline: CloudOff,

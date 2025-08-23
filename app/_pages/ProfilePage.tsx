@@ -7,11 +7,11 @@ import {
   Calendar,
   Heart,
   Tag as TagIcon,
-  MapPin,
   Download,
   TrendingUp,
   Share,
 } from "lucide-react";
+import Image from "next/image";
 import Card from "@/components/ui/Card";
 import Button from "@/components/ui/Button";
 import Input from "@/components/ui/Input";
@@ -20,7 +20,6 @@ import StatCard from "@/components/ui/StatCard";
 import { sampleUser, sampleMemories } from "@/data/sampleData";
 
 const ProfilePage: React.FC = () => {
-  const [sidebarOpen, setSidebarOpen] = useState(false);
   const [isEditing, setIsEditing] = useState(false);
   const [userProfile, setUserProfile] = useState(sampleUser);
   const [activeTab, setActiveTab] = useState<"overview" | "memories" | "stats">(
@@ -71,7 +70,7 @@ const ProfilePage: React.FC = () => {
                     <div className="relative">
                       <div className="w-32 h-32 bg-white rounded-full p-2 shadow-soft-lg">
                         {userProfile.avatar ? (
-                          <img
+                          <Image
                             src={userProfile.avatar}
                             alt={userProfile.name}
                             className="w-full h-full rounded-full object-cover"
@@ -198,7 +197,11 @@ const ProfilePage: React.FC = () => {
                   {tabs.map((tab) => (
                     <button
                       key={tab.id}
-                      onClick={() => setActiveTab(tab.id as any)}
+                      onClick={() =>
+                        setActiveTab(
+                          tab.id as "overview" | "memories" | "stats"
+                        )
+                      }
                       className={`py-2 px-1 border-b-2 font-medium text-sm ${
                         activeTab === tab.id
                           ? "border-primary-500 text-primary-600"
@@ -226,19 +229,21 @@ const ProfilePage: React.FC = () => {
                         <div className="flex items-center space-x-3">
                           <div className="w-2 h-2 bg-primary-600 rounded-full"></div>
                           <span className="text-sm text-neutral-600">
-                            Created "Family Thanksgiving Dinner" 2 hours ago
+                            Created &quot;Family Thanksgiving Dinner&quot; 2
+                            hours ago
                           </span>
                         </div>
                         <div className="flex items-center space-x-3">
                           <div className="w-2 h-2 bg-secondary-600 rounded-full"></div>
                           <span className="text-sm text-neutral-600">
-                            Added 3 photos to "Sunrise Hike" yesterday
+                            Added 3 photos to &quot;Sunrise Hike&quot; yesterday
                           </span>
                         </div>
                         <div className="flex items-center space-x-3">
                           <div className="w-2 h-2 bg-accent-600 rounded-full"></div>
                           <span className="text-sm text-neutral-600">
-                            Shared "Birthday Party" with family 3 days ago
+                            Shared &quot;Birthday Party&quot; with family 3 days
+                            ago
                           </span>
                         </div>
                       </div>
@@ -259,7 +264,7 @@ const ProfilePage: React.FC = () => {
                               className="aspect-video bg-neutral-100 rounded-lg overflow-hidden"
                             >
                               {memory.images && memory.images[0] && (
-                                <img
+                                <Image
                                   src={memory.images[0]}
                                   alt={memory.title}
                                   className="w-full h-full object-cover"

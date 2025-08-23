@@ -1,13 +1,6 @@
 "use client";
 import React, { useState } from "react";
-import {
-  Activity,
-  Database,
-  Users,
-  AlertTriangle,
-  RefreshCw,
-  Trash2,
-} from "lucide-react";
+import { Activity, Database, Users, RefreshCw, Trash2 } from "lucide-react";
 import Card from "@/components/ui/Card";
 import Button from "@/components/ui/Button";
 import StatCard from "@/components/ui/StatCard";
@@ -30,7 +23,6 @@ interface LogEntry {
 }
 
 const AdminPage: React.FC = () => {
-  const [sidebarOpen, setSidebarOpen] = useState(false);
   const [activeTab, setActiveTab] = useState<"overview" | "jobs" | "logs">(
     "overview"
   );
@@ -148,7 +140,9 @@ const AdminPage: React.FC = () => {
                     return (
                       <button
                         key={tab.id}
-                        onClick={() => setActiveTab(tab.id as any)}
+                        onClick={() =>
+                          setActiveTab(tab.id as "overview" | "jobs" | "logs")
+                        }
                         className={`py-2 px-1 border-b-2 font-medium text-sm flex items-center space-x-2 ${
                           activeTab === tab.id
                             ? "border-primary-500 text-primary-600"

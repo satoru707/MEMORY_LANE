@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { Search, Filter, Calendar, Tag as TagIcon, Clock } from "lucide-react";
+import { Search, Filter, Tag as TagIcon, Clock } from "lucide-react";
 import MemoryCard from "@/components/MemoryCard";
 import EmptyState from "@/components/ui/EmptyState";
 import Modal from "@/components/ui/Modal";
@@ -39,7 +39,8 @@ const SearchPage: React.FC<SearchPageProps> = ({
     "birthday party",
     "work milestone",
   ]);
-  const allMemories = useLiveQuery(() => db.memories.toArray(), []) || [];
+  const liveMemories = useLiveQuery(() => db.memories.toArray(), []) || [];
+  const allMemories = React.useMemo(() => liveMemories, [liveMemories]);
 
   useEffect(() => {
     if (searchQuery.trim()) {
@@ -334,10 +335,20 @@ const SearchPage: React.FC<SearchPageProps> = ({
                     Search Tips
                   </h3>
                   <ul className="space-y-2 text-sm text-primary-800">
-                    <li>• Use quotes for exact phrases: "family vacation"</li>
-                    <li>• Search by date: "2023" or "December"</li>
-                    <li>• Find by location: "Paris" or "home"</li>
-                    <li>• Search by mood: "joyful" or "peaceful"</li>
+                    <li>
+                      • Use quotes for exact phrases: &quot;family
+                      vacation&quot;
+                    </li>
+                    <li>
+                      • Search by date: &quot;2023&quot; or &quot;December&quot;
+                    </li>
+                    <li>
+                      • Find by location: &quot;Paris&quot; or &quot;home&quot;
+                    </li>
+                    <li>
+                      • Search by mood: &quot;joyful&quot; or
+                      &quot;peaceful&quot;
+                    </li>
                   </ul>
                 </div>
               </div>

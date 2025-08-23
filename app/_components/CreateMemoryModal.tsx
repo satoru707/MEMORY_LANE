@@ -1,12 +1,5 @@
 import React, { useState, useEffect } from "react";
-import {
-  Upload,
-  Calendar,
-  MapPin,
-  Heart,
-  Tag as TagIcon,
-  Loader,
-} from "lucide-react";
+import { Upload, Heart, Tag as TagIcon, Loader } from "lucide-react";
 import Modal from "./ui/Modal";
 import Button from "./ui/Button";
 import Input from "./ui/Input";
@@ -272,7 +265,9 @@ const CreateMemoryModal: React.FC<CreateMemoryModalProps> = ({
               return (
                 <button
                   key={tab.id}
-                  onClick={() => setActiveTab(tab.id as any)}
+                  onClick={() =>
+                    setActiveTab(tab.id as "content" | "media" | "metadata")
+                  }
                   className={`py-2 px-1 border-b-2 font-medium text-sm ${
                     activeTab === tab.id
                       ? "border-primary-500 text-primary-600"
@@ -421,7 +416,7 @@ const CreateMemoryModal: React.FC<CreateMemoryModalProps> = ({
                   <button
                     key={mood.value}
                     onClick={() =>
-                      setFormData({ ...formData, mood: mood.value as any })
+                      setFormData({ ...formData, mood: mood.value as string })
                     }
                     className={`p-2 rounded-lg border-2 text-sm font-medium transition-colors ${
                       formData.mood === mood.value

@@ -1,15 +1,6 @@
 "use client";
 import React, { useState, useEffect } from "react";
-import {
-  User as Icon,
-  Shield,
-  Download,
-  Trash2,
-  Bot,
-  Cloud,
-  Bell,
-  Palette,
-} from "lucide-react";
+import { User as Icon, Download, Trash2, Cloud, Palette } from "lucide-react";
 import Modal from "@/components/ui/Modal";
 import Button from "@/components/ui/Button";
 import Card from "@/components/ui/Card";
@@ -297,7 +288,7 @@ const SettingsPage: React.FC = () => {
                       ...userSettings,
                       preferences: {
                         ...userSettings.preferences,
-                        theme: value as any,
+                        theme: value as "light" | "dark" | "system",
                       },
                     })
                   }

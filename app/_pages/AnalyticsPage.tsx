@@ -4,9 +4,7 @@ import {
   Calendar,
   Heart,
   Tag as TagIcon,
-  Users,
   Clock,
-  MapPin,
   BarChart3,
 } from "lucide-react";
 import Card from "@/components/ui/Card";
@@ -24,7 +22,7 @@ const AnalyticsPage: React.FC = () => {
 
   const filterMemories = (memories: typeof sampleMemories, range: string) => {
     const now = new Date();
-    let startDate = new Date();
+    const startDate = new Date();
 
     switch (range) {
       case "week":
@@ -400,7 +398,7 @@ const AnalyticsPage: React.FC = () => {
                       </h3>
                       <div className="space-y-2 text-sm text-neutral-700">
                         <p>
-                          • You're most active on weekends, with 63% more
+                          • You&apos;re most active on weekends, with 63% more
                           memories created
                         </p>
                         <p>
@@ -408,8 +406,8 @@ const AnalyticsPage: React.FC = () => {
                           and "travel" tags
                         </p>
                         <p>
-                          • You've been consistently grateful this month - 40%
-                          of memories have a grateful mood
+                          • You&apos;ve been consistently grateful this month -
+                          40% of memories have a grateful mood
                         </p>
                         <p>
                           • Your memory creation has increased 23% compared to

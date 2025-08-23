@@ -29,7 +29,7 @@ const OfflineBanner: React.FC<OfflineBannerProps> = ({
           <WifiOff className="w-5 h-5 text-warning-600" />
           <div>
             <p className="text-sm font-medium text-warning-800">
-              You're offline
+              You&apos;re offline
             </p>
             <p className="text-xs text-warning-700">
               Some features may be limited until you reconnect

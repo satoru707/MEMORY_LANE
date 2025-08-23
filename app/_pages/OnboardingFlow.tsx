@@ -93,8 +93,8 @@ const OnboardingFlow: React.FC<OnboardingFlowProps> = ({ onComplete }) => {
                 Welcome to Memory Lane
               </h1>
               <p className="text-lg text-neutral-600 max-w-md mx-auto">
-                Let's set up your personal timeline to start capturing and
-                preserving your life's most precious moments.
+                Let&apos;s set up your personal timeline to start capturing and
+                preserving your life&apos;s most precious moments.
               </p>
             </div>
           </div>

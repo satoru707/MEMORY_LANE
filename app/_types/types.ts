@@ -1,6 +1,6 @@
 export interface AuthPageProps {
   type: "login" | "signup" | "passwordless";
-  onSubmit: (data: any) => void;
+  onSubmit: (data: { email: string; password?: string }) => void;
 }
 
 export interface OnboardingFlowProps {

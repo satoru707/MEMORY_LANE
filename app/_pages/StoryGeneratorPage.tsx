@@ -1,6 +1,6 @@
 "use client";
 import React, { useState } from "react";
-import { BookOpen, Wand2, Download, FileText, Share } from "lucide-react";
+import { BookOpen, Wand2, Download, FileText } from "lucide-react";
 import Button from "@/components/ui/Button";
 import Card from "@/components/ui/Card";
 import Select from "@/components/ui/Select";
@@ -104,7 +104,7 @@ const StoryGeneratorPage: React.FC = () => {
       });
 
       let yPosition = 40;
-      formattedParagraphs.forEach((paragraph, index) => {
+      formattedParagraphs.forEach((paragraph) => {
         doc.text(paragraph, 20, yPosition);
         yPosition += 10; // Space between paragraphs
       });
@@ -331,8 +331,9 @@ const StoryGeneratorPage: React.FC = () => {
                           Ready to Create Your Story
                         </h3>
                         <p className="text-neutral-600 max-w-md">
-                          Configure your settings and click "Generate Story" to
-                          create a beautiful narrative from your memories.
+                          Configure your settings and click &quot;Generate
+                          Story&quot; to create a beautiful narrative from your
+                          memories.
                         </p>
                       </div>
                     )}
