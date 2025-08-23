@@ -1,5 +1,5 @@
 "use client";
-import AuthForm from "../page";
+import AuthForm from "../auth_page";
 
 const ForgetPage = () => (
   <AuthForm
