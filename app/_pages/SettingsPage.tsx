@@ -1,7 +1,7 @@
 "use client";
 import React, { useState, useEffect } from "react";
 import {
-  User,
+  User as Icon,
   Shield,
   Download,
   Trash2,
@@ -10,6 +10,7 @@ import {
   Bell,
   Palette,
 } from "lucide-react";
+import Modal from "@/components/ui/Modal";
 import Button from "@/components/ui/Button";
 import Card from "@/components/ui/Card";
 import Input from "@/components/ui/Input";
@@ -18,27 +19,31 @@ import ConfirmDialog from "@/components/ui/ConfirmDialog";
 import { sampleUser } from "@/data/sampleData";
 import { db, useNetworkStatus, UserSettings } from "@/lib/utils";
 import { useLiveQuery } from "dexie-react-hooks";
+import MediaUploader from "@/components/ui/MediaUploader";
 
 const SettingsPage: React.FC = () => {
   const [activeSection, setActiveSection] = useState("account");
   const [showDeleteDialog, setShowDeleteDialog] = useState(false);
+  const [showCodeVerification, setShowCodeVerification] = useState(false);
+  const [verificationCode, setVerificationCode] = useState("");
+  const [codeError, setCodeError] = useState("");
+  const [timer, setTimer] = useState(300); // 5 minutes in seconds
   const isOnline = useNetworkStatus();
   const dbUserSettings =
     useLiveQuery(() => db.userSettings.get("settings"), []) || null;
   const [userSettings, setUserSettings] = useState<UserSettings>(() => {
     if (dbUserSettings) {
+      console.log("from dexie", dbUserSettings);
       return dbUserSettings;
     } else {
-      // Default settings if not in DB
       return {
         id: "settings",
-        userId: sampleUser.id,
-        preferences: {
-          aiEnabled: sampleUser.preferences.aiEnabled,
-          autoBackup: sampleUser.preferences.autoBackup,
-          theme: sampleUser.preferences.theme,
-        },
+        name: sampleUser.name,
         syncStatus: "synced",
+        userId: "user-sarah",
+        email: sampleUser.email,
+        avatar: sampleUser.avatar,
+        preferences: sampleUser.preferences,
       };
     }
   });
@@ -48,13 +53,12 @@ const SettingsPage: React.FC = () => {
     if (dbUserSettings) {
       setUserSettings(dbUserSettings);
     } else {
-      // If no settings exist, initialize and save default settings to DB
       const defaultSettings: UserSettings = {
         id: "settings",
         userId: sampleUser.id,
+        email: sampleUser.email,
+        name: sampleUser.name,
         preferences: {
-          aiEnabled: sampleUser.preferences.aiEnabled,
-          autoBackup: sampleUser.preferences.autoBackup,
           theme: sampleUser.preferences.theme,
         },
         syncStatus: "synced",
@@ -63,8 +67,19 @@ const SettingsPage: React.FC = () => {
     }
   }, [dbUserSettings]);
 
+  // Timer effect for code verification
+  useEffect(() => {
+    let interval: NodeJS.Timeout;
+    if (showCodeVerification && timer > 0) {
+      interval = setInterval(() => {
+        setTimer((prev) => prev - 1);
+      }, 1000);
+    }
+    return () => clearInterval(interval);
+  }, [showCodeVerification, timer]);
+
   const sections = [
-    { id: "account", label: "Account", icon: User },
+    { id: "account", label: "Account", icon: Icon },
     { id: "sync", label: "Sync & Backup", icon: Cloud },
     { id: "appearance", label: "Appearance", icon: Palette },
     { id: "data", label: "Data & Export", icon: Download },
@@ -79,7 +94,6 @@ const SettingsPage: React.FC = () => {
   const handleSaveSettings = async (updatedSettings: UserSettings) => {
     const finalSettings = {
       ...updatedSettings,
-      syncStatus: isOnline ? "synced" : "pending",
     };
     await db.userSettings.put(finalSettings);
     if (!isOnline) {
@@ -91,7 +105,55 @@ const SettingsPage: React.FC = () => {
       });
     }
     setUserSettings(finalSettings);
+    console.log("Settings", finalSettings);
   };
+
+  const handleDeleteRequest = () => {
+    setShowDeleteDialog(false);
+    setShowCodeVerification(true);
+    setTimer(300); // Reset timer to 5 minutes
+    setVerificationCode("");
+    setCodeError("");
+    console.log("Simulating sending verification code to", userSettings.email);
+  };
+
+  const handleVerifyCode = () => {
+    // Simulate code verification (in real app, this would be an API call)
+    const simulatedCorrectCode = "123456"; // Simulated code for testing
+    if (verificationCode === simulatedCorrectCode) {
+      console.log("Account deleted successfully");
+      setShowCodeVerification(false);
+      // Simulate redirect
+      console.log("Redirecting to / route");
+      window.location.href = "/";
+    } else {
+      setCodeError("Invalid verification code");
+    }
+  };
+
+  const formatTime = (seconds: number) => {
+    const minutes = Math.floor(seconds / 60);
+    const remainingSeconds = seconds % 60;
+    return `${minutes}:${remainingSeconds < 10 ? "0" : ""}${remainingSeconds}`;
+  };
+
+  //  <div className="flex items-center justify-between p-4 border border-blue-200 rounded-lg bg-blue-50">
+  //                 <div>
+  //                   <h3 className="font-medium text-blue-900">Auto Backup</h3>
+  //                   <p className="text-sm text-blue-700">
+  //                     All memories are automatically backed up
+  //                   </p>
+  //                 </div>
+  //                 <label className="relative inline-flex items-center cursor-pointer">
+  //                   <input
+  //                     type="checkbox"
+  //                     checked={true}
+  //                     className="sr-only peer"
+  //                     disabled
+  //                   />
+  //                   <div className="w-11 h-6 bg-neutral-200 peer-focus:outline-none peer-focus:ring-4 peer-focus:ring-blue-300 rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-neutral-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-blue-600"></div>
+  //                 </label>
+  //               </div>
 
   const renderSection = () => {
     switch (activeSection) {
@@ -113,18 +175,22 @@ const SettingsPage: React.FC = () => {
                     }))
                   }
                 />
-                <Input
-                  label="Email Address"
-                  type="email"
-                  value={userSettings.email}
-                  onChange={(e) =>
-                    setUserSettings((prev) => ({
-                      ...prev,
-                      email: e.target.value,
-                    }))
-                  }
-                  disabled
-                />
+                <div>
+                  <Input
+                    label="Email"
+                    value={userSettings.email}
+                    disabled
+                    onChange={(e) =>
+                      setUserSettings((prev) => ({
+                        ...prev,
+                        email: e.target.value,
+                      }))
+                    }
+                  />
+                  <p className="text-sm text-blue-700 mt-1">
+                    Email address cannot be changed
+                  </p>
+                </div>
               </div>
             </div>
 
@@ -132,28 +198,39 @@ const SettingsPage: React.FC = () => {
               <h3 className="text-lg font-medium text-neutral-900 mb-3">
                 Profile Picture
               </h3>
-              <div className="flex items-center space-x-4">
-                <div className="w-16 h-16 bg-neutral-200 rounded-full overflow-hidden">
-                  {userSettings.avatar ? (
-                    <img
-                      src={userSettings.avatar}
-                      alt={userSettings.name}
-                      className="w-full h-full object-cover"
-                    />
-                  ) : (
-                    <div className="w-full h-full flex items-center justify-center">
-                      <User className="w-8 h-8 text-neutral-400" />
-                    </div>
-                  )}
-                </div>
-                <div className="space-x-2">
-                  <Input type="file" className="hidden" accept="image/*" />
-
-                  <Button variant="ghost" size="sm">
-                    Remove
-                  </Button>
-                </div>
-              </div>
+              <MediaUploader
+                label="Upload Profile Picture"
+                files={
+                  userSettings.avatar
+                    ? [
+                        {
+                          id: "current-avatar",
+                          name: "Profile Picture",
+                          size: 0,
+                          type: "image/*",
+                          url: userSettings.avatar,
+                        },
+                      ]
+                    : []
+                }
+                onFilesChange={(newFiles) => {
+                  const newAvatar =
+                    newFiles.length > 0 ? newFiles[0].url : undefined;
+                  setUserSettings((prev) => ({ ...prev, avatar: newAvatar }));
+                }}
+                onUpload={async (newFiles) => {
+                  if (newFiles.length > 0) {
+                    const file = newFiles[0];
+                    // Simulate uploading to a backend
+                    const imageUrl = URL.createObjectURL(file);
+                    setUserSettings((prev) => ({ ...prev, avatar: imageUrl }));
+                    console.log("Simulating avatar upload:", file.name);
+                  }
+                }}
+                className="max-w-xs"
+                multiple={false}
+                maxFiles={1}
+              />
             </div>
 
             <div className="pt-4 border-t border-neutral-200">
@@ -163,6 +240,7 @@ const SettingsPage: React.FC = () => {
                     ...userSettings,
                     name: userSettings.name,
                     email: userSettings.email,
+                    avatar: userSettings.avatar, // Ensure avatar is saved
                   })
                 }
               >
@@ -180,31 +258,21 @@ const SettingsPage: React.FC = () => {
                 Sync & Backup
               </h2>
               <div className="space-y-4">
-                <div className="flex items-center justify-between p-4 border border-neutral-200 rounded-lg">
+                <div className="flex items-center justify-between p-4 border border-blue-200 rounded-lg bg-blue-50">
                   <div>
-                    <h3 className="font-medium text-neutral-900">
-                      Auto Backup
-                    </h3>
-                    <p className="text-sm text-neutral-600">
-                      Automatically backup your memories
+                    <h3 className="font-medium text-blue-900">Auto Backup</h3>
+                    <p className="text-sm text-blue-700">
+                      All memories are automatically backed up
                     </p>
                   </div>
                   <label className="relative inline-flex items-center cursor-pointer">
                     <input
                       type="checkbox"
-                      checked={userSettings.preferences.autoBackup}
-                      onChange={(e) =>
-                        handleSaveSettings({
-                          ...userSettings,
-                          preferences: {
-                            ...userSettings.preferences,
-                            autoBackup: e.target.checked,
-                          },
-                        })
-                      }
+                      checked={true}
                       className="sr-only peer"
+                      disabled
                     />
-                    <div className="w-11 h-6 bg-neutral-200 peer-focus:outline-none peer-focus:ring-4 peer-focus:ring-primary-300 rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-neutral-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-primary-600"></div>
+                    <div className="w-11 h-6 bg-neutral-200 peer-focus:outline-none peer-focus:ring-4 peer-focus:ring-blue-300 rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-neutral-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-blue-600"></div>
                   </label>
                 </div>
               </div>
@@ -234,21 +302,6 @@ const SettingsPage: React.FC = () => {
                     })
                   }
                 />
-
-                <div className="flex items-center justify-between p-4 border border-neutral-200 rounded-lg">
-                  <div>
-                    <h3 className="font-medium text-neutral-900">
-                      Reduce Motion
-                    </h3>
-                    <p className="text-sm text-neutral-600">
-                      Minimize animations and transitions
-                    </p>
-                  </div>
-                  <label className="relative inline-flex items-center cursor-pointer">
-                    <input type="checkbox" className="sr-only peer" />
-                    <div className="w-11 h-6 bg-neutral-200 peer-focus:outline-none peer-focus:ring-4 peer-focus:ring-primary-300 rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-neutral-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-primary-600"></div>
-                  </label>
-                </div>
               </div>
             </div>
           </div>
@@ -308,7 +361,7 @@ const SettingsPage: React.FC = () => {
   return (
     <div className="min-h-fit bg-neutral-50">
       <div className="flex">
-        <main className="flex">
+        <main className="">
           <div className="p-6 max-w-6xl mx-auto">
             <div className="space-y-6">
               <div>
@@ -360,15 +413,65 @@ const SettingsPage: React.FC = () => {
       <ConfirmDialog
         isOpen={showDeleteDialog}
         onClose={() => setShowDeleteDialog(false)}
-        onConfirm={() => {
-          console.log("Account deleted");
-          setShowDeleteDialog(false);
-        }}
+        onConfirm={handleDeleteRequest}
         title="Delete Account"
         message="This will permanently delete your account and all your memories. This action cannot be undone."
         confirmLabel="Delete Account"
         variant="destructive"
       />
+
+      {/* Code Verification Dialog */}
+      <Modal
+        isOpen={showCodeVerification}
+        onClose={() => setShowCodeVerification(false)}
+        size="sm"
+      >
+        <div className="text-center space-y-4">
+          <div className="w-12 h-12 bg-destructive-100 rounded-full flex items-center justify-center mx-auto">
+            <Trash2 className="w-6 h-6 text-destructive-600" />
+          </div>
+          <div className="space-y-2">
+            <h3 className="text-lg font-semibold text-neutral-900">
+              Verify Account Deletion
+            </h3>
+            <p className="text-neutral-600">
+              A verification code has been sent to {userSettings.email}. Please
+              enter the code below. The code will expire in {formatTime(timer)}.
+            </p>
+          </div>
+          <div className="space-y-4">
+            <Input
+              label="Verification Code"
+              value={verificationCode}
+              onChange={(e) => setVerificationCode(e.target.value)}
+              placeholder="Enter 6-digit code"
+            />
+            {codeError && (
+              <p className="text-sm text-destructive-600">{codeError}</p>
+            )}
+            {timer === 0 && (
+              <p className="text-sm text-destructive-600">
+                The verification code has expired. Please request a new code.
+              </p>
+            )}
+          </div>
+          <div className="flex space-x-3 justify-center pt-4">
+            <Button
+              variant="secondary"
+              onClick={() => setShowCodeVerification(false)}
+            >
+              Cancel
+            </Button>
+            <Button
+              variant="destructive"
+              onClick={handleVerifyCode}
+              disabled={timer === 0 || verificationCode.length !== 6}
+            >
+              Verify and Delete
+            </Button>
+          </div>
+        </div>
+      </Modal>
     </div>
   );
 };

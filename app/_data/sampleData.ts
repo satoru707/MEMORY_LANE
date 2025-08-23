@@ -8,10 +8,21 @@ export const sampleUser: User = {
   avatar:
     "https://images.pexels.com/photos/774909/pexels-photo-774909.jpeg?auto=compress&cs=tinysrgb&w=150",
   preferences: {
-    aiEnabled: true,
-    autoBackup: true,
     theme: "light",
   },
+  role: "admin", // Default role for sample user
+};
+
+export const adminUser: User = {
+  id: "user-admin",
+  name: "Admin User",
+  email: "admin@example.com",
+  avatar:
+    "https://images.pexels.com/photos/1036623/pexels-photo-1036623.jpeg?auto=compress&cs=tinysrgb&w=150",
+  preferences: {
+    theme: "dark",
+  },
+  role: "admin",
 };
 
 export const notification = [
@@ -368,8 +379,6 @@ export const sampleFamilyMembers: User[] = [
     avatar:
       "https://images.pexels.com/photos/220453/pexels-photo-220453.jpeg?auto=compress&cs=tinysrgb&w=150",
     preferences: {
-      aiEnabled: false,
-      autoBackup: false,
       theme: "system",
     },
   },
@@ -380,8 +389,6 @@ export const sampleFamilyMembers: User[] = [
     avatar:
       "https://images.pexels.com/photos/1183266/pexels-photo-1183266.jpeg?auto=compress&cs=tinysrgb&w=150",
     preferences: {
-      aiEnabled: true,
-      autoBackup: true,
       theme: "dark",
     },
   },

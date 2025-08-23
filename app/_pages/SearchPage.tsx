@@ -7,7 +7,6 @@ import Input from "@/components/ui/Input";
 import Button from "@/components/ui/Button";
 import Tag from "@/components/ui/Tag";
 import { Memory } from "@/types/types";
-import { sampleMemories } from "@/data/sampleData";
 import DatePicker from "@/components/ui/DatePicker";
 import MultiSelect from "@/components/ui/MultiSelect";
 import { db } from "@/lib/utils";
@@ -40,13 +39,6 @@ const SearchPage: React.FC<SearchPageProps> = ({
     "birthday party",
     "work milestone",
   ]);
-  const [popularTags] = useState([
-    "family",
-    "travel",
-    "work",
-    "friends",
-    "celebrations",
-  ]);
   const allMemories = useLiveQuery(() => db.memories.toArray(), []) || [];
 
   useEffect(() => {
@@ -54,15 +46,19 @@ const SearchPage: React.FC<SearchPageProps> = ({
       setIsSearching(true);
       // Simulate search delay
       const timer = setTimeout(() => {
-        const filtered = sampleMemories.filter(
+        const filtered = allMemories.filter(
           (memory) =>
             memory.title.toLowerCase().includes(searchQuery.toLowerCase()) ||
             memory.content.toLowerCase().includes(searchQuery.toLowerCase()) ||
             memory.tags.some((tag) =>
               tag.toLowerCase().includes(searchQuery.toLowerCase())
             ) ||
-            memory.location.toLowerCase().includes(searchQuery.toLowerCase()) ||
-            memory.mood.toLowerCase().includes(searchQuery.toLowerCase())
+            (memory.location &&
+              memory.location
+                .toLowerCase()
+                .includes(searchQuery.toLowerCase())) ||
+            (memory.mood &&
+              memory.mood.toLowerCase().includes(searchQuery.toLowerCase()))
         );
         setSearchResults(filtered);
         setIsSearching(false);
@@ -98,9 +94,8 @@ const SearchPage: React.FC<SearchPageProps> = ({
     selectedMoods,
     startDate,
     endDate,
+    allMemories, // Add allMemories to dependencies for filteredMemories
   ]);
-
-  console.log("FIltered", filteredMemories);
 
   const availableTags = Array.from(
     new Set(allMemories.flatMap((mem) => mem.tags))
@@ -111,7 +106,7 @@ const SearchPage: React.FC<SearchPageProps> = ({
 
   const groupedResults = {
     memories: filteredMemories, // Use filteredMemories here
-    tags: popularTags.filter((tag) =>
+    tags: availableTags.filter((tag) =>
       tag.toLowerCase().includes(searchQuery.toLowerCase())
     ),
     dates: [], // Could include date-based results
@@ -259,7 +254,7 @@ const SearchPage: React.FC<SearchPageProps> = ({
                           onEdit={() => onEditMemory(memory)}
                           onDelete={() => onDeleteMemory(memory.id)}
                           onShareMemory={() => {
-                            console.log("sdsd"), onShareMemory(memory);
+                            onShareMemory(memory);
                           }}
                         />
                       ))}
@@ -268,28 +263,26 @@ const SearchPage: React.FC<SearchPageProps> = ({
                 )}
 
                 {/* No Results */}
-                {groupedResults.memories.length === 0 &&
-                  groupedResults.tags.length === 0 &&
-                  !isSearching && (
-                    <EmptyState
-                      icon={Search}
-                      title="No results found"
-                      description={`No memories found for "${searchQuery}". Try different keywords or check your spelling.`}
-                    />
-                  )}
-
-                {filteredMemories.length === 0 &&
-                  (endDate ||
-                    startDate ||
-                    selectedMoods.length > 0 ||
-                    selectedTags.length > 0) &&
-                  !searchQuery && (
-                    <EmptyState
-                      icon={Search}
-                      title="No results found"
-                      description="No memories match your selected filters. Try adjusting them."
-                    />
-                  )}
+                {groupedResults.memories.length === 0 && !isSearching && (
+                  <EmptyState
+                    icon={Search}
+                    title="No results found"
+                    description={(() => {
+                      if (searchQuery.trim()) {
+                        return `No memories found for "${searchQuery}". Try different keywords or check your spelling.`;
+                      } else if (
+                        endDate ||
+                        startDate ||
+                        selectedMoods.length > 0 ||
+                        selectedTags.length > 0
+                      ) {
+                        return "No memories match your selected filters. Try adjusting them.";
+                      } else {
+                        return "Start searching or apply filters to find your memories.";
+                      }
+                    })()}
+                  />
+                )}
               </div>
             ) : (
               /* Search Suggestions */
@@ -321,12 +314,12 @@ const SearchPage: React.FC<SearchPageProps> = ({
                     Popular Tags
                   </h2>
                   <div className="flex flex-wrap gap-2">
-                    {popularTags.map((tag) => (
+                    {availableTags.slice(0, 5).map((tag) => (
                       <Tag
                         key={tag}
                         className="cursor-pointer hover:bg-primary-200"
                         onClick={() => {
-                          setSearchQuery(tag), console.log("test");
+                          setSearchQuery(tag);
                         }}
                       >
                         {tag}

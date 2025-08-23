@@ -7,6 +7,7 @@ import Select from "@/components/ui/Select";
 import DatePicker from "@/components/ui/DatePicker";
 import Loader from "@/components/ui/Loader";
 import { sampleStoryExample } from "@/data/sampleData";
+import { useNetworkStatus } from "@/lib/utils";
 import Input from "../_components/ui/Input";
 import { jsPDF } from "jspdf";
 import { Document, Paragraph, Packer, TextRun } from "docx";
@@ -35,6 +36,7 @@ const StoryGeneratorPage: React.FC = () => {
   const [generatedStory, setGeneratedStory] = useState<string | null>(null);
   const [progress, setProgress] = useState(0);
   const [fileName, setFileName] = useState("story");
+  const isOnline = useNetworkStatus();
 
   const toneOptions = [
     { value: "reflective", label: "Reflective & Thoughtful" },
@@ -251,7 +253,7 @@ const StoryGeneratorPage: React.FC = () => {
                     <Button
                       onClick={handleGenerateStory}
                       loading={isGenerating}
-                      disabled={isGenerating}
+                      disabled={isGenerating || !isOnline}
                       className="w-full"
                     >
                       <BookOpen className="w-4 h-4 mr-2" />

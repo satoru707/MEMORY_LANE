@@ -14,6 +14,7 @@ interface ConfirmDialogProps {
   variant?: "default" | "destructive";
   loading?: boolean;
   children?: React.ReactNode;
+  disabled?: boolean;
 }
 
 const ConfirmDialog: React.FC<ConfirmDialogProps> = ({
@@ -26,7 +27,7 @@ const ConfirmDialog: React.FC<ConfirmDialogProps> = ({
   cancelLabel = "Cancel",
   variant = "default",
   loading = false,
-  children,
+  disabled,
 }) => {
   return (
     <Modal isOpen={isOpen} onClose={onClose} size="sm">
@@ -50,6 +51,7 @@ const ConfirmDialog: React.FC<ConfirmDialogProps> = ({
             variant={variant === "destructive" ? "destructive" : "primary"}
             onClick={onConfirm}
             loading={loading}
+            disabled={disabled || false}
           >
             {confirmLabel}
           </Button>

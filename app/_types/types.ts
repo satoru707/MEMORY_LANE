@@ -46,10 +46,9 @@ export interface User {
   email: string;
   avatar?: string;
   preferences?: {
-    aiEnabled: boolean;
-    autoBackup: boolean;
     theme: "light" | "dark" | "system";
   };
+  role?: "user" | "admin";
 }
 
 export interface Tag {

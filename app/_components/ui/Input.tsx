@@ -16,6 +16,7 @@ const Input: React.FC<InputProps> = ({
   className,
   id,
   require,
+  value,
   ...props
 }) => {
   const inputId = id;
@@ -39,6 +40,7 @@ const Input: React.FC<InputProps> = ({
           error && "border-destructive-500 focus:ring-destructive-500",
           className
         )}
+        value={value}
         {...props}
         {...(require ? { required: true } : {})}
       />

@@ -4,18 +4,34 @@ import MemoryCard from "@/components/MemoryCard";
 import Input from "@/components/ui/Input";
 import Button from "@/components/ui/Button";
 import Card from "@/components/ui/Card";
-import { sampleTags, sampleMemories } from "@/data/sampleData";
+import { Memory } from "@/types/types";
+import { sampleTags } from "@/data/sampleData";
+import { db } from "@/lib/utils";
+import { useLiveQuery } from "dexie-react-hooks";
 
-const TagsPage: React.FC = () => {
+interface TagPageProps {
+  onEditMemory: (memory: Memory) => void;
+  onMemoryClick: (memory: Memory) => void;
+  onDeleteMemory: (memoryId: string) => void;
+  onShareMemory: (memory: Memory) => void;
+}
+
+const TagsPage: React.FC<TagPageProps> = ({
+  onMemoryClick,
+  onEditMemory,
+  onDeleteMemory,
+  onShareMemory,
+}) => {
   const [selectedTag, setSelectedTag] = useState<string | null>(null);
   const [searchQuery, setSearchQuery] = useState("");
+  const allMemories = useLiveQuery(() => db.memories.toArray(), []) || [];
 
   const filteredTags = sampleTags.filter((tag) =>
     tag.name.toLowerCase().includes(searchQuery.toLowerCase())
   );
 
   const tagMemories = selectedTag
-    ? sampleMemories.filter((memory) => memory.tags.includes(selectedTag))
+    ? allMemories.filter((memory) => memory.tags.includes(selectedTag))
     : [];
 
   const getTagSize = (count: number) => {
@@ -83,7 +99,7 @@ const TagsPage: React.FC = () => {
                   <h3 className="text-2xl font-bold text-neutral-900">
                     {
                       //filter sample memories for memoris created this month
-                      sampleMemories.filter(
+                      allMemories.filter(
                         (mem) =>
                           mem.date.split("-")[1] ===
                           `${new Date().getMonth() + 1}`
@@ -182,7 +198,14 @@ const TagsPage: React.FC = () => {
                   <MemoryCard
                     key={memory.id}
                     memory={memory}
-                    onClick={() => {}}
+                    onClick={() => {
+                      onMemoryClick(memory);
+                    }}
+                    onEdit={() => onEditMemory(memory)}
+                    onDelete={() => onDeleteMemory(memory.id)}
+                    onShareMemory={() => {
+                      onShareMemory(memory);
+                    }}
                   />
                 ))}
               </div>

@@ -21,7 +21,6 @@ export function useNetworkStatus() {
 
     // Set initial status
     setIsOnline(navigator.onLine);
-    console.log("Kinda confused", navigator.onLine);
 
     return () => {
       window.removeEventListener("online", handleOnline);
@@ -60,9 +59,10 @@ export interface Comment {
 export interface UserSettings {
   id?: string; // Could be userId or a fixed 'settings' ID
   userId: string;
+  email: string;
+  name: string;
+  avatar?: string;
   preferences: {
-    aiEnabled: boolean;
-    autoBackup: boolean;
     theme: "light" | "dark" | "system";
   };
   syncStatus: "synced" | "pending" | "offline";

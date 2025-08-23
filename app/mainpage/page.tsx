@@ -176,7 +176,7 @@ function App() {
       ...memory,
       isPublic: !memory.isPublic,
       updatedAt: new Date().toISOString(),
-      syncStatus: (isOnline ? "synced" : "pending") as
+      syncStatus: (isOnline ? "synced" : "offline") as
         | "synced"
         | "pending"
         | "offline", // Explicitly cast to literal type
@@ -286,7 +286,14 @@ function App() {
               onShareMemory={handleShareMemory}
             />
           )}
-          {currentPage === "tags" && <TagsPage />}
+          {currentPage === "tags" && (
+            <TagsPage
+              onMemoryClick={handleMemoryClick}
+              onEditMemory={handleEditMemory}
+              onDeleteMemory={handleDeleteMemory}
+              onShareMemory={handleShareMemory}
+            />
+          )}
           {currentPage === "stories" && <StoryGeneratorPage />}
           {currentPage === "settings" && <SettingsPage />}
           {currentPage === "family" && <FamilyTimelinePage />}

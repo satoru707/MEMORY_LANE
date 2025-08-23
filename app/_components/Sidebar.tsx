@@ -13,7 +13,7 @@ import {
 } from "lucide-react";
 import { cn } from "@/lib/utils";
 import Button from "./ui/Button";
-import { analytics, sampleMemories } from "@/data/sampleData";
+import { analytics, sampleMemories, sampleUser } from "@/data/sampleData";
 
 interface SidebarProps {
   isOpen: boolean;
@@ -37,7 +37,9 @@ const Sidebar: React.FC<SidebarProps> = ({
     { name: "Analytics", icon: TrendingUp, id: "analytics" },
     { name: "Settings", icon: Settings, id: "settings" },
     // { name: "Profile", icon: User, id: "profile" },
-    { name: "Admin", icon: Shield, id: "admin" },
+    ...(sampleUser.role === "admin"
+      ? [{ name: "Admin", icon: Shield, id: "admin" }]
+      : []),
   ];
 
   return (
@@ -99,16 +101,10 @@ const Sidebar: React.FC<SidebarProps> = ({
                   </span>
                 </div>
                 <div className="flex justify-between">
-                  <span>Tags</span>
+                  <span>Per week</span>
                   <span className="font-medium">
                     {" "}
-                    {
-                      sampleMemories.filter(
-                        (mem) =>
-                          mem.date.split("-")[1] ===
-                          `${new Date().getMonth() + 1}`
-                      ).length
-                    }
+                    {analytics.averagePerWeek}
                   </span>
                 </div>
               </div>
