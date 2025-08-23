@@ -11,7 +11,7 @@ import {
   TrendingUp,
   Share,
 } from "lucide-react";
-import Image from "next/image";
+import image from "next/image";
 import Card from "@/components/ui/Card";
 import Button from "@/components/ui/Button";
 import Input from "@/components/ui/Input";
@@ -70,7 +70,7 @@ const ProfilePage: React.FC = () => {
                     <div className="relative">
                       <div className="w-32 h-32 bg-white rounded-full p-2 shadow-soft-lg">
                         {userProfile.avatar ? (
-                          <Image
+                          <img
                             src={userProfile.avatar}
                             alt={userProfile.name}
                             className="w-full h-full rounded-full object-cover"
@@ -264,7 +264,7 @@ const ProfilePage: React.FC = () => {
                               className="aspect-video bg-neutral-100 rounded-lg overflow-hidden"
                             >
                               {memory.images && memory.images[0] && (
-                                <Image
+                                <img
                                   src={memory.images[0]}
                                   alt={memory.title}
                                   className="w-full h-full object-cover"

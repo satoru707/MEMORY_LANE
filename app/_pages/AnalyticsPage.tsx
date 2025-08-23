@@ -402,8 +402,8 @@ const AnalyticsPage: React.FC = () => {
                           memories created
                         </p>
                         <p>
-                          • Your happiest memories often include the "family"
-                          and "travel" tags
+                          • Your happiest memories often include the
+                          &apos;family&apos; and &apos;travel&apos; tags
                         </p>
                         <p>
                           • You&apos;ve been consistently grateful this month -

@@ -1,8 +1,8 @@
 "use client";
-import AuthPage from "../page";
+import AuthForm from "../page";
 
 const ForgetPage = () => (
-  <AuthPage
+  <AuthForm
     type="passwordless"
     onSubmit={(data) => console.log("Signup:", data)}
   />

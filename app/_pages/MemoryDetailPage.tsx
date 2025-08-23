@@ -17,7 +17,7 @@ import Modal from "@/components/ui/Modal";
 import { Memory } from "@/types/types";
 import { db } from "@/lib/utils";
 import { useLiveQuery } from "dexie-react-hooks";
-import Image from "next/image";
+import image from "next/image";
 
 interface MemoryDetailPageProps {
   memoryId: string;
@@ -33,7 +33,7 @@ const MemoryDetailPage: React.FC<MemoryDetailPageProps> = ({
   onShareMemory,
 }) => {
   const [lightboxOpen, setLightboxOpen] = useState(false);
-  const [currentImageIndex, setCurrentImageIndex] = useState(0);
+  const [currentimageIndex, setCurrentimageIndex] = useState(0);
 
   // Fetch the memory reactively from Dexie
   const memory = useLiveQuery(() => db.memories.get(memoryId), [memoryId]);
@@ -59,7 +59,7 @@ const MemoryDetailPage: React.FC<MemoryDetailPageProps> = ({
   };
 
   const openLightbox = (index: number) => {
-    setCurrentImageIndex(index);
+    setCurrentimageIndex(index);
     setLightboxOpen(true);
   };
 
@@ -147,7 +147,7 @@ const MemoryDetailPage: React.FC<MemoryDetailPageProps> = ({
               </div>
             </div>
 
-            {/* Images */}
+            {/* images */}
             {memory.images && memory.images.length > 0 && (
               <div className="space-y-4">
                 {memory.images.length === 1 ? (
@@ -155,7 +155,7 @@ const MemoryDetailPage: React.FC<MemoryDetailPageProps> = ({
                     className="aspect-video bg-neutral-100 rounded-lg overflow-hidden cursor-pointer"
                     onClick={() => openLightbox(0)}
                   >
-                    <Image
+                    <img
                       src={memory.images[0]}
                       alt={memory.title}
                       className="w-full h-full object-cover hover:scale-105 transition-transform duration-200"
@@ -169,7 +169,7 @@ const MemoryDetailPage: React.FC<MemoryDetailPageProps> = ({
                         className="aspect-square bg-neutral-100 rounded-lg overflow-hidden cursor-pointer"
                         onClick={() => openLightbox(index)}
                       >
-                        <Image
+                        <img
                           src={image}
                           alt={`${memory.title} ${index + 1}`}
                           className="w-full h-full object-cover hover:scale-105 transition-transform duration-200"
@@ -274,7 +274,7 @@ const MemoryDetailPage: React.FC<MemoryDetailPageProps> = ({
         </div>
       </div>
 
-      {/* Image Lightbox */}
+      {/* image Lightbox */}
       <Modal
         isOpen={lightboxOpen}
         onClose={() => setLightboxOpen(false)}
@@ -282,9 +282,9 @@ const MemoryDetailPage: React.FC<MemoryDetailPageProps> = ({
       >
         <div className="relative">
           {memory.images && (
-            <Image
-              src={memory.images[currentImageIndex]}
-              alt={`${memory.title} ${currentImageIndex + 1}`}
+            <img
+              src={memory.images[currentimageIndex]}
+              alt={`${memory.title} ${currentimageIndex + 1}`}
               className="w-full h-auto max-h-screen object-contain"
             />
           )}
@@ -294,9 +294,9 @@ const MemoryDetailPage: React.FC<MemoryDetailPageProps> = ({
               {memory.images.map((_, index) => (
                 <button
                   key={index}
-                  onClick={() => setCurrentImageIndex(index)}
+                  onClick={() => setCurrentimageIndex(index)}
                   className={`w-3 h-3 rounded-full transition-colors ${
-                    index === currentImageIndex ? "bg-white" : "bg-white/50"
+                    index === currentimageIndex ? "bg-white" : "bg-white/50"
                   }`}
                 />
               ))}

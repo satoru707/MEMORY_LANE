@@ -11,7 +11,7 @@ import {
   Share,
   Download,
 } from "lucide-react";
-import Image from "next/image";
+import image from "next/image";
 import { Memory } from "@/types/types";
 import Card from "./ui/Card";
 import Tag from "./ui/Tag";
@@ -171,10 +171,10 @@ const MemoryCard: React.FC<MemoryCardProps> = ({
           </div>
         </div>
 
-        {/* Image Thumbnail */}
+        {/* image Thumbnail */}
         {memory.images && memory.images.length > 0 && (
           <div className="aspect-video bg-neutral-100 rounded-lg overflow-hidden">
-            <Image
+            <img
               src={memory.images[0]}
               alt={memory.title}
               className="w-full h-full object-cover"

@@ -16,7 +16,6 @@ import DatePicker from "@/components/ui/DatePicker";
 import Modal from "@/components/ui/Modal";
 import MultiSelect from "@/components/ui/MultiSelect";
 import { Comment, Like } from "@/lib/utils";
-import Image from "next/image";
 
 interface FamilyMember {
   id: string;
@@ -56,14 +55,20 @@ const FamilyTimelinePage: React.FC = () => {
   const [startDate, setStartDate] = useState<Date | null>(null);
   const [endDate, setEndDate] = useState<Date | null>(null);
 
-  // Fetch all memories from Dexie
-  const currentUserMemories =
+  const currentUserMemorie =
     useLiveQuery(
       () => db.memories.where({ userId: "user-sarah" }).toArray(),
       []
     ) || [];
+
   const allLikes = useLiveQuery(() => db.likes.toArray(), []) || [];
+
   const allComments = useLiveQuery(() => db.comments.toArray(), []) || [];
+
+  const currentUserMemories = React.useMemo(
+    () => currentUserMemorie,
+    [currentUserMemorie]
+  );
 
   // Helper function to get user details by ID
   const getUserById = (userId: string): FamilyMember => {
@@ -417,7 +422,7 @@ const FamilyTimelinePage: React.FC = () => {
                     }`}
                   >
                     {member.avatar ? (
-                      <Image
+                      <img
                         src={member.avatar}
                         alt={member.name}
                         className="w-5 h-5 rounded-full"
@@ -445,7 +450,7 @@ const FamilyTimelinePage: React.FC = () => {
                     {/* Shared By Header */}
                     <div className="flex items-center space-x-3 pb-3 border-b border-neutral-200">
                       {memory.sharedBy.avatar ? (
-                        <Image
+                        <img
                           src={memory.sharedBy.avatar}
                           alt={memory.sharedBy.name}
                           className="w-10 h-10 rounded-full"
@@ -490,10 +495,10 @@ const FamilyTimelinePage: React.FC = () => {
                         </div>
                       </div>
 
-                      {/* Image */}
+                      {/* image */}
                       {memory.images && memory.images.length > 0 && (
                         <div className="aspect-video bg-neutral-100 rounded-lg overflow-hidden">
-                          <Image
+                          <img
                             src={memory.images[0]}
                             alt={memory.title}
                             className="w-full h-full object-cover"
@@ -569,7 +574,7 @@ const FamilyTimelinePage: React.FC = () => {
                                 className="flex items-center"
                               >
                                 {reaction.author.avatar ? (
-                                  <Image
+                                  <img
                                     src={reaction.author.avatar}
                                     alt={reaction.author.name}
                                     className="w-6 h-6 rounded-full border-2 border-white"
@@ -603,7 +608,7 @@ const FamilyTimelinePage: React.FC = () => {
                               className="flex items-start space-x-3 group relative"
                             >
                               {comment.author.avatar ? (
-                                <Image
+                                <img
                                   src={comment.author.avatar}
                                   alt={comment.author.name}
                                   className="w-8 h-8 rounded-full"

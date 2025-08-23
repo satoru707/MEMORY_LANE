@@ -6,7 +6,6 @@ import Button from "@/components/ui/Button";
 import Input from "@/components/ui/Input";
 import Select from "@/components/ui/Select";
 import ConfirmDialog from "@/components/ui/ConfirmDialog";
-import Image from "next/image";
 
 interface FamilyMember {
   id: string;
@@ -221,7 +220,7 @@ const PrivacySettingsPage: React.FC = () => {
                         >
                           <div className="w-12 h-12 bg-neutral-200 rounded-full overflow-hidden flex-shrink-0">
                             {member.avatar ? (
-                              <Image
+                              <img
                                 src={member.avatar}
                                 alt={member.name}
                                 className="w-full h-full object-cover"

@@ -1,8 +1,8 @@
 "use client";
-import AuthPage from "../page";
+import AuthForm from "../page";
 
 const LoginPage = () => (
-  <AuthPage type="login" onSubmit={(data) => console.log("Login:", data)} />
+  <AuthForm type="login" onSubmit={(data) => console.log("Login:", data)} />
 );
 
 export default LoginPage;

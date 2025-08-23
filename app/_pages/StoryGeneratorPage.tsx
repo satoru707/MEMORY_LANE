@@ -19,7 +19,7 @@ interface StorySettings {
   };
   tone: "reflective" | "celebratory" | "nostalgic";
   length: "short" | "medium" | "long";
-  includeImages: boolean;
+  includeimages: boolean;
 }
 
 const StoryGeneratorPage: React.FC = () => {
@@ -30,7 +30,7 @@ const StoryGeneratorPage: React.FC = () => {
     },
     tone: "reflective",
     length: "medium",
-    includeImages: true,
+    includeimages: true,
   });
   const [isGenerating, setIsGenerating] = useState(false);
   const [generatedStory, setGeneratedStory] = useState<string | null>(null);
@@ -222,23 +222,23 @@ const StoryGeneratorPage: React.FC = () => {
                         }
                       />
 
-                      {/* Include Images */}
+                      {/* Include images */}
                       <div className="flex items-center space-x-3">
                         <input
                           type="checkbox"
-                          id="includeImages"
+                          id="includeimages"
                           checked={false}
                           disabled
                           onChange={(e) =>
                             setSettings((prev) => ({
                               ...prev,
-                              includeImages: e.target.checked,
+                              includeimages: e.target.checked,
                             }))
                           }
                           className="w-4 h-4 text-primary-600 border-neutral-300 rounded focus:ring-primary-500"
                         />
                         <label
-                          htmlFor="includeImages"
+                          htmlFor="includeimages"
                           className="text-sm text-neutral-700"
                         >
                           Include images in story{" "}

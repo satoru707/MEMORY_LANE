@@ -1,5 +1,5 @@
 "use client";
-import React, { useState } from "react";
+import React from "react";
 import { Plus, Cloud, CloudOff, Menu, Bell, User } from "lucide-react";
 import Button from "./ui/Button";
 import { cn } from "@/lib/utils";

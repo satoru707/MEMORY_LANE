@@ -2,7 +2,7 @@ import React, { useEffect, useState } from "react";
 import { Bell, X, Heart, MessageCircle, UserPlus, Share } from "lucide-react";
 import { cn } from "@/lib/utils";
 import Button from "./Button";
-import Image from "next/image";
+import image from "next/image";
 
 interface Notification {
   id: string;
@@ -157,7 +157,7 @@ const NotificationToast: React.FC<NotificationToastProps> = ({
                   >
                     <div className="flex items-start space-x-3">
                       {notification.avatar ? (
-                        <Image
+                        <img
                           src={notification.avatar}
                           alt=""
                           className="w-10 h-10 rounded-full"

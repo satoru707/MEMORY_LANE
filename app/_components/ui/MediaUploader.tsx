@@ -1,7 +1,7 @@
 import React, { useState, useRef } from "react";
 import { Upload, X, File, AlertCircle } from "lucide-react";
 import { cn } from "@/lib/utils";
-import Image from "next/image";
+import image from "next/image";
 import Button from "./Button";
 import Loader from "./Loader";
 
@@ -156,7 +156,7 @@ const MediaUploader: React.FC<MediaUploaderProps> = ({
           Drag & drop files here, or click to browse
         </p>
         <p className="text-sm text-neutral-500">
-          {accept.includes("image") ? "Images" : "Files"} up to {maxSize}MB each
+          {accept.includes("image") ? "images" : "Files"} up to {maxSize}MB each
         </p>
 
         <input
@@ -181,7 +181,7 @@ const MediaUploader: React.FC<MediaUploaderProps> = ({
               <div className="flex-shrink-0">
                 {file.type.startsWith("image/") ? (
                   <div className="w-10 h-10 bg-neutral-200 rounded overflow-hidden">
-                    <Image
+                    <img
                       src={file.url}
                       alt={file.name}
                       className="w-full h-full object-cover"
