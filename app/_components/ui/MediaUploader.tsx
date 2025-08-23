@@ -1,7 +1,6 @@
 import React, { useState, useRef } from "react";
 import { Upload, X, File, AlertCircle } from "lucide-react";
 import { cn } from "@/lib/utils";
-import image from "next/image";
 import Button from "./Button";
 import Loader from "./Loader";
 

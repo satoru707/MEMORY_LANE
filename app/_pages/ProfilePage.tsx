@@ -11,7 +11,6 @@ import {
   TrendingUp,
   Share,
 } from "lucide-react";
-import image from "next/image";
 import Card from "@/components/ui/Card";
 import Button from "@/components/ui/Button";
 import Input from "@/components/ui/Input";

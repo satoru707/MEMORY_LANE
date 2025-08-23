@@ -1,5 +1,5 @@
 import React from "react";
-import { DivideIcon as LucideIcon } from "lucide-react";
+import { LucideIcon } from "lucide-react";
 import { cn } from "../../_lib/utils";
 import Button from "./Button";
 

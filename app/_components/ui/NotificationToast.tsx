@@ -2,7 +2,6 @@ import React, { useEffect, useState } from "react";
 import { Bell, X, Heart, MessageCircle, UserPlus, Share } from "lucide-react";
 import { cn } from "@/lib/utils";
 import Button from "./Button";
-import image from "next/image";
 
 interface Notification {
   id: string;

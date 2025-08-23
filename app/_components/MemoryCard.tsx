@@ -11,7 +11,6 @@ import {
   Share,
   Download,
 } from "lucide-react";
-import image from "next/image";
 import { Memory } from "@/types/types";
 import Card from "./ui/Card";
 import Tag from "./ui/Tag";

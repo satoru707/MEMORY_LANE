@@ -12,7 +12,6 @@ import {
 import Button from "@/components/ui/Button";
 import Card from "@/components/ui/Card";
 import "./global.css";
-import image from "next/image";
 
 const LandingPage: React.FC = () => {
   const features = [

@@ -17,7 +17,6 @@ import Modal from "@/components/ui/Modal";
 import { Memory } from "@/types/types";
 import { db } from "@/lib/utils";
 import { useLiveQuery } from "dexie-react-hooks";
-import image from "next/image";
 
 interface MemoryDetailPageProps {
   memoryId: string;
