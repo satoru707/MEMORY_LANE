@@ -126,7 +126,7 @@ const LandingPage: React.FC = () => {
             </div>
 
             <div className="mt-12">
-              img
+              <img
                 src="https://images.pexels.com/photos/267350/pexels-photo-267350.jpeg?auto=compress&cs=tinysrgb&w=1200"
                 alt="Memory Lane App Screenshot"
                 className="w-full max-w-4xl mx-auto rounded-2xl shadow-2xl border border-neutral-200"
