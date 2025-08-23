@@ -2,5 +2,5 @@
   "buildCommand": "pnpm run build",
   "outputDirectory": ".next",
   "installCommand": "npm install",
-  "framework": "next"
+  "framework": "nextjs"
 }
